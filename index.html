@@ -1,0 +1,2365 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>意識留存發射塔數據 - Overlapping English Tabs (Fixed)</title>
+        <style>
+        /* 載入霞鶩文楷字體，營造硬筆手寫感 */
+        @import url('https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC&display=swap');
+       
+        :root {
+            --paper-color: #e8dcc4; --paper-dark: #d5c3a1; --ink-color: #2c2825; --bg-color: #1a1511;
+            --tab-blue: #1c2d42; --tab-green: #2b4227; --tab-red: #5c1e1b; --tab-black: #1a1a1a;
+            --de-dark: #121820; --de-cyan: #3bd6c6; --de-red: #d33833;
+        }
+
+        /* 確保所有元素的 padding 和 border 不會撐破總寬度 */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at center, #2a221b 0%, #0a0807 100%);
+            color: var(--ink-color); font-family: 'Noto Serif TC', serif; margin: 0; padding: 20px;
+            display: flex; justify-content: center;
+        }
+
+        .container { width: 100%; max-width: 900px; position: relative; }
+
+        /* 置頂標題 */
+        .header-wrapper {
+            position: relative; height: 140px; background: #111; margin-bottom: 35px;
+            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .gear-container {
+            position: absolute; top: 5px; right: 5px; width: 70px; height: 70px; z-index: 1;
+            animation: spin 6s linear infinite;
+        }
+
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .telegram-header {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--paper-color);
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.05"/></svg>');
+            clip-path: polygon(0 0, calc(100% - 70px) 0, 100% 70px, 100% 100%, 0 100%);
+            z-index: 2; padding: 20px; border: 1px solid var(--paper-dark);
+        }
+        
+        .typewriter-text { font-family: 'Courier New', Courier, monospace; margin: 0; }
+        .telegram-header h1 { font-size: 24px; border-bottom: 2px dashed #888; padding-bottom: 10px; margin-bottom: 10px; }
+
+        /* 頂部交疊英文標籤核心設計 (已修復 Bug) */
+        .tabs-container {
+            display: flex;
+            width: 100%;
+            position: relative;
+            z-index: 3;
+            margin-bottom: -2px; 
+            padding: 0; /* 移除原本會導致突出的 padding */
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 5px 15px 5px; /* 縮小左右 padding，避免手機版文字撐破 */
+            cursor: pointer;
+            color: #d1d5db;
+            font-weight: bold;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            transform: translateY(10px); 
+            border: 1px solid rgba(255,255,255,0.2);
+            border-bottom: none;
+            clip-path: polygon(10% 0, 90% 0, 100% 100%, 0% 100%);
+            margin-left: -15px; /* 稍微縮小交疊的 margin，適應小螢幕 */
+            position: relative;
+        }
+        
+        .tab:first-child {
+            margin-left: 0;
+            clip-path: polygon(0 0, 90% 0, 100% 100%, 0% 100%); 
+        }
+        
+        .tab:last-child {
+             clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
+        }
+
+        .tab:hover { 
+            transform: translateY(5px); 
+            z-index: 8; 
+        }
+        
+        .tab.active {
+            transform: translateY(0); 
+            color: #fff;
+            padding-bottom: 18px; 
+            font-size: 1rem;
+        }
+
+        .tab-1 { background: var(--tab-blue); }
+        .tab-2 { background: var(--tab-green); }
+        .tab-3 { background: var(--tab-red); }
+        .tab-4 { background: var(--tab-black); }
+
+        /* 主要內容區 */
+        .content-area {
+            background-color: var(--paper-color);
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noiseFilter"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noiseFilter)" opacity="0.06"/></svg>');
+            padding: 40px 25px; /* 手機版內距微調 */
+            border: 2px solid var(--paper-dark);
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.1), 5px 5px 15px rgba(0,0,0,0.5);
+            min-height: 400px; position: relative; z-index: 2; line-height: 1.8;
+            border-radius: 4px;
+        }
+
+        .tab-content { display: none; animation: fadeIn 0.4s ease-in-out; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* 密碼更新條目遮罩 */
+        .secret-module { background: var(--de-dark); border: 1px solid #2a3b4c; margin: 25px 0; padding: 20px; color: var(--de-cyan); font-family: 'Courier New', Courier, monospace; box-shadow: inset 0 0 15px #000; position: relative; overflow: hidden; }
+        .lock-interface { position: relative; z-index: 2; text-align: center; }
+        
+        /* 避免手機版輸入框溢出 */
+        .lock-interface input { 
+            background: #0a0f14; border: 1px solid var(--de-cyan); color: var(--de-cyan); 
+            padding: 8px 12px; margin: 10px 0; font-family: 'Courier New', Courier, monospace; 
+            outline: none; width: 100%; max-width: 250px; 
+        }
+        
+        .lock-interface button { background: #1a2a3a; border: 1px solid var(--de-cyan); color: var(--de-cyan); padding: 8px 25px; cursor: pointer; transition: all 0.2s; margin-top: 5px; }
+        .lock-interface button:hover { background: var(--de-cyan); color: #000; }
+        .unlocked-content { display: none; position: relative; z-index: 2; border-top: 1px dashed var(--de-cyan); padding-top: 15px; margin-top: 10px; color: #e0f2fe; }
+        .error-msg { color: var(--de-red); font-size: 0.9em; display: none; margin-top: 5px; }
+
+        /* 針對小螢幕進一步微調標籤文字 */
+        @media (max-width: 480px) {
+            .tab {
+                font-size: 0.8rem;
+                padding: 12px 2px 15px 2px;
+                letter-spacing: -0.5px;
+            }
+            .tab.active { font-size: 0.85rem; }
+        }
+        /* --- 70/80年代 復古終端機風格 CSS 開始 --- */
+        .retro-terminal {
+            background-color: #050505;
+            border: 2px solid #33ff33;
+            padding: 20px;
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(51, 255, 51, 0.2), inset 0 0 15px rgba(51, 255, 51, 0.1);
+        }
+
+        /* 模擬 CRT 螢幕掃描線 */
+        .retro-terminal::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 2;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .terminal-header {
+            color: #33ff33;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #33ff33;
+            padding-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 5px #33ff33;
+        }
+
+        .terminal-text {
+            color: #33ff33;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            text-shadow: 0 0 3px #33ff33;
+            position: relative;
+            z-index: 3;
+            letter-spacing: 1px;
+        }
+
+        /* 復古終端機閃爍游標 */
+        .blinking-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background-color: #33ff33;
+            vertical-align: middle;
+            animation: terminal-blink 1s step-end infinite;
+            margin-left: 5px;
+            box-shadow: 0 0 5px #33ff33;
+        }
+
+        @keyframes terminal-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        /* --- 70/80年代 復古終端機風格 CSS 結束 --- */
+            /* --- 真實打字機特效 CSS 開始 --- */
+        .typewriter-container {
+            background-color: #e8dcc4; /* 泛黃老舊紙張 */
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.08"/></svg>');
+            padding: 25px 20px;
+            margin: 25px 0;
+            border: 1px solid #c2b29a;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.05), 2px 3px 6px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        /* 動態打字的英文內容 */
+        .typewriter-output {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            color: #1a1a1a;
+            line-height: 1.8;
+            text-transform: uppercase;
+            font-weight: bold;
+            opacity: 0.85; /* 模擬打字機微透的墨水 */
+        }
+
+        /* 閃爍的打字機游標 */
+        .typewriter-cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.1rem;
+            background-color: #1a1a1a;
+            vertical-align: middle;
+            margin-left: 2px;
+            animation: blink-cursor 0.8s step-end infinite;
+        }
+
+        @keyframes blink-cursor {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* 下方的小字中文翻譯 */
+        .typewriter-translation {
+            margin-top: 20px;
+            font-family: 'LXGW WenKai TC', 'Kaiti', serif; 
+            font-size: 0.95rem;
+            color: #5c4e3c;
+            border-top: 1px solid rgba(194, 178, 154, 0.5);
+            padding-top: 15px;
+            line-height: 1.6;
+            opacity: 0; /* 預設隱藏，等打字完再浮現 */
+            transition: opacity 1.5s ease-in;
+        }
+        /* --- 真實打字機特效 CSS 結束 --- */
+
+              
+
+      
+           
+        /* --- 修正版：無限滾動腦電波動畫 CSS 開始 --- */
+        .wave-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 40px;
+            overflow: hidden;
+            opacity: 0.8;
+            pointer-events: none; /* 避免擋住下方的點擊輸入框 */
+        }
+        
+        .anim-wave {
+            width: 200%; /* 兩倍寬度來做無限平移滾動 */
+            height: 100%;
+            animation: wave-slide 3s linear infinite;
+        }
+
+        .anim-wave path {
+            fill: none; /* 去除黑色實體填充 */
+            stroke: var(--de-cyan); /* 極樂迪斯科青色線條 */
+            stroke-width: 1.5;
+            filter: drop-shadow(0 0 3px var(--de-cyan)); /* 螢光發光特效 */
+        }
+
+        @keyframes wave-slide {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); } /* 無縫接軌的平移循環 */
+        }
+        /* --- 修正版：無限滾動腦電波動畫 CSS 結束 --- */
+        /* --- 專有名詞 (Glossary) 檔案卡排版 CSS 開始 --- */
+        .glossary-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 25px;
+        }
+        
+        .glossary-item {
+            border-left: 4px solid var(--tab-blue);
+            background: rgba(28, 45, 66, 0.03);
+            padding: 15px 20px;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.03);
+        }
+        
+        .glossary-item:hover {
+            background: rgba(28, 45, 66, 0.08);
+            border-left-color: var(--de-red); /* 滑鼠游標經過時線條變紅 */
+            transform: translateX(3px); /* 微微向右浮動 */
+        }
+        
+        .glossary-term {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1a1a1a;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap; /* 讓手機版英文也能自動換行 */
+            gap: 10px;
+            border-bottom: 1px dashed rgba(0,0,0,0.2);
+            padding-bottom: 8px;
+        }
+        
+        .term-en {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.8rem;
+            color: #777;
+            font-weight: normal;
+            letter-spacing: 0.5px;
+        }
+        
+        .glossary-desc {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #333;
+            text-align: justify;
+        }
+        /* --- 專有名詞 (Glossary) 檔案卡排版 CSS 結束 --- */
+        /* --- 極樂迪斯科風格：繼續按鈕 CSS 開始 --- */
+        .de-continue-btn {
+            background: linear-gradient(90deg, #d33833 0%, #a8201d 100%);
+            color: #fff;
+            border: none;
+            width: 100%;
+            text-align: left;
+            padding: 12px 20px;
+            font-size: 1.15rem;
+            font-family: 'LXGW WenKai TC', 'Kaiti', serif;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            letter-spacing: 2px;
+        }
+        
+        .de-continue-btn:hover {
+            background: linear-gradient(90deg, #e53935 0%, #c62828 100%);
+            transform: translateY(-2px);
+            box-shadow: 2px 4px 8px rgba(0,0,0,0.4);
+        }
+
+        .de-continue-btn::after {
+            content: '▶';
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        /* --- 極樂迪斯科風格：繼續按鈕 CSS 結束 --- */
+    // --- 「繼續」按鈕展開隱藏區塊功能 ---
+    function revealLock(containerId, btnElement) {
+        document.getElementById(containerId).style.display = 'block';
+        btnElement.style.display = 'none'; // 點擊後隱藏「繼續」按鈕
+    }
+
+    // --- 第二個終端機資料解密打字動畫 (核心概念) ---
+    const terminalTextToType2 = "回夢人若遭受不可控外力的影響下而死，其核心概念會轉化成其對應的可佩戴天基武器，具有強大的殺傷力及超越科技水平的幻象顯現，並蠶食使用者的理智，最後佩戴者靈魂會變成核心概念的一部分。";
+    let terminal_i_2 = 0;
+    let isTerminalTyping2 = false; 
+
+    function typeTerminalEffect2() {
+        const typingElement = document.getElementById("terminal-typing-text-2");
+        if (terminal_i_2 < terminalTextToType2.length) {
+            typingElement.innerHTML += terminalTextToType2.charAt(terminal_i_2);
+            terminal_i_2++;
+            let randomDelay = Math.floor(Math.random() * 30) + 10; 
+            setTimeout(typeTerminalEffect2, randomDelay);
+        } else {
+            isTerminalTyping2 = false;
+        }
+    }
+
+    // 專屬於核心概念的解鎖功能
+    function unlock2(inputId, correctPwd, contentId, errorId) {
+        if (document.getElementById(inputId).value === correctPwd) {
+            document.getElementById(contentId).style.display = 'block';
+            document.getElementById(inputId).parentElement.style.display = 'none';
+            document.getElementById(errorId).style.display = 'none';
+            
+            if (!isTerminalTyping2) {
+                isTerminalTyping2 = true;
+                terminal_i_2 = 0; 
+                document.getElementById("terminal-typing-text-2").innerHTML = ""; 
+                document.getElementById("terminal-cursor-2").style.display = "inline-block"; 
+                setTimeout(typeTerminalEffect2, 500); 
+            }
+        } else {
+            document.getElementById(errorId).style.display = 'block';
+        }
+    }
+        /* --- 存疑項目 (Glitch) 特效 CSS 開始 --- */
+        .corrupted-item {
+            border-left: 4px solid var(--de-red) !important;
+            background: rgba(211, 56, 51, 0.05) !important;
+            position: relative;
+        }
+
+        .corrupted-item::before {
+            content: "[WARNING: DATA CORRUPTED]";
+            position: absolute;
+            top: 5px; right: 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.7rem;
+            color: var(--de-red);
+            font-weight: bold;
+            animation: blink-warning 2s infinite;
+        }
+
+        .glitch-text {
+            animation: glitch-anim 4s infinite;
+            display: inline-block;
+        }
+
+        @keyframes blink-warning {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @keyframes glitch-anim {
+            0%, 94%, 98%, 100% { filter: none; opacity: 1; transform: translate(0); text-shadow: none; }
+            95% { filter: blur(1px); opacity: 0.8; transform: translate(-2px, 1px); text-shadow: 2px 0 rgba(255,0,0,0.8), -2px 0 rgba(0,255,255,0.8); }
+            96% { filter: none; opacity: 1; transform: translate(2px, -1px); text-shadow: -2px 0 rgba(255,0,0,0.8), 2px 0 rgba(0,255,255,0.8); }
+            97% { filter: blur(2px) contrast(150%); opacity: 0.9; transform: translate(-1px, 2px); }
+            99% { transform: skewX(10deg); filter: blur(1px); }
+        }
+        /* --- 存疑項目 (Glitch) 特效 CSS 結束 --- */
+        /* --- 陣營子分頁 (Factions Sub-tabs) 樣式開始 --- */
+        .faction-selector-container {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        
+        .faction-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: var(--ink-color);
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+        }
+        
+        .faction-subtitle {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 20px;
+            font-family: 'LXGW WenKai TC', 'Kaiti', serif;
+        }
+        
+        /* 替換為完美的 2x3 網格對齊 */
+        .faction-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 強制平分為兩欄 */
+            gap: 12px;
+            width: 100%;
+        }
+        
+        .faction-btn {
+            background: transparent;
+            border: 1px solid #a39274;
+            color: var(--ink-color);
+            padding: 8px 4px; /* 稍微縮小內距，讓長名字塞得下 */
+            font-family: 'LXGW WenKai TC', 'Kaiti', serif;
+            font-size: 0.95rem; /* 字體微調，適應手機螢幕 */
+            line-height: 1.3;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+            letter-spacing: 0.5px;
+            
+            /* 強迫症福音：統一寬高與文字置中 */
+            width: 100%; 
+            min-height: 52px; /* 確保即使有的名字換行了，按鈕高度也絕對一樣 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .faction-btn:hover {
+            background: rgba(163, 146, 116, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        /* 被選中時的按鈕狀態 */
+        .faction-btn.active {
+            background: var(--tab-black);
+            color: #e8dcc4;
+            border-color: #111;
+            box-shadow: 2px 3px 6px rgba(0,0,0,0.3);
+            transform: translateY(0);
+        }
+        
+        .faction-divider {
+            border-top: 1px dashed #a39274;
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        /* 分隔線中間的裝飾菱形 */
+        .faction-divider::after {
+            content: '◆';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #a39274;
+            background: var(--paper-color);
+            padding: 0 10px;
+            font-size: 1.2rem;
+        }
+        
+        .faction-content {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        
+        .faction-content.active {
+            display: block;
+        }
+        
+        .faction-header-style {
+            text-align: center;
+            color: var(--ink-color);
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+            border-bottom: 2px solid rgba(0,0,0,0.8);
+            display: inline-block;
+            padding-bottom: 5px;
+            /* 讓標題置中顯示 */
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        /* --- 陣營子分頁 (Factions Sub-tabs) 樣式結束 --- */
+        /* 提升鐵則文字對比度 */
+        .vory-code-box {
+            background-color: #111;
+            background-image: url('data:image/svg+xml;utf8,<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23noise)" opacity="0.08"/></svg>');
+            color: #e0d8c3; /* 修改為更高對比的米白色 */
+            padding: 20px;
+            border-left: 5px solid var(--de-red);
+            box-shadow: 4px 4px 0px rgba(0,0,0,0.8);
+            margin-bottom: 25px;
+        }
+
+        /* 殘缺檔案風格 (針對機密條目) */
+        .redacted-terminal {
+            font-family: 'Courier New', Courier, monospace;
+            color: #d33833;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+        /* --- 檔案室專屬排版 CSS 開始 --- */
+        .archive-panel {
+            background: rgba(0,0,0,0.02);
+            border: 1px solid #c2b29a;
+            padding: 25px 20px;
+            margin-bottom: 30px;
+            position: relative;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        .archive-panel::before {
+            content: 'DATA_ARCHIVE // 補充協議';
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background: var(--paper-color);
+            padding: 0 10px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.8rem;
+            color: var(--tab-black);
+            font-weight: bold;
+            border: 1px solid #c2b29a;
+        }
+
+        .currency-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 600px) {
+            .currency-grid { grid-template-columns: 1fr; }
+        }
+
+        .currency-card {
+            padding: 15px;
+            border: 1px dashed #888;
+            background: #fdfbf7;
+            position: relative;
+        }
+
+        .currency-card-title {
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-bottom: 2px solid;
+            padding-bottom: 5px;
+            margin-bottom: 10px;
+        }
+
+        /* 戰後文化產物 - 書籍展示 */
+        .book-display {
+            border-left: 5px solid #1e3b70;
+            padding: 20px;
+            background: linear-gradient(to right, rgba(30, 59, 112, 0.08), transparent);
+            margin-top: 20px;
+        }
+        
+        .book-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #1e3b70;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .book-author {
+            font-size: 0.9rem;
+            color: #555;
+            font-family: 'Courier New', Courier, monospace;
+            margin-bottom: 15px;
+        }
+        /* --- 檔案室專屬排版 CSS 結束 --- */
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-wrapper">
+        <div class="gear-container">
+            <svg viewBox="0 0 100 100" fill="#a67c52" xmlns="http://www.w3.org/2000/svg">
+                <path d="M50 15c-1.5 0-3 1-3 2.5v7.2c-2.3.6-4.5 1.5-6.5 2.7l-5.1-5.1c-1-1-2.8-1-3.8 0l-3.5 3.5c-1 1-1 2.8 0 3.8l5.1 5.1c-1.2 2-2.1 4.2-2.7 6.5h-7.2c-1.5 0-2.5 1.5-2.5 3v5c0 1.5 1 2.5 2.5 2.5h7.2c.6 2.3 1.5 4.5 2.7 6.5l-5.1 5.1c-1 1-1 2.8 0 3.8l3.5 3.5c1 1 2.8 1 3.8 0l5.1-5.1c2 1.2 4.2 2.1 6.5 2.7v7.2c0 1.5 1.5 2.5 3 2.5h5c1.5 0 3-1 3-2.5v-7.2c2.3-.6 4.5-1.5 6.5-2.7l5.1 5.1c1 1 2.8 1 3.8 0l3.5-3.5c1-1 1-2.8 0-3.8l-5.1-5.1c1.2-2 2.1-4.2 2.7-6.5h7.2c1.5 0 2.5-1.5 2.5-3v-5c0-1.5-1-2.5-2.5-2.5h-7.2c-.6-2.3-1.5-4.5-2.7-6.5l5.1-5.1c1-1 1-2.8 0-3.8l-3.5-3.5c-1-1-2.8-1-3.8 0l-5.1 5.1c-2-1.2-4.2-2.1-6.5-2.7v-7.2c0-1.5-1.5-2.5-3-2.5h-5zM50 38c6.6 0 12 5.4 12 12s-5.4 12-12 12-12-5.4-12-12 5.4-12 12-12z"/>
+            </svg>
+        </div>
+        <div class="telegram-header">
+            <h1 class="typewriter-text">意識留存發射塔數據</h1>
+            <p class="typewriter-text">——交由新世界人民代表大會管理</p>
+        </div>
+    </div>
+
+    <div class="tabs-container">
+        <div class="tab tab-1 active" style="z-index: 10;" onclick="switchTab('tab1', this)">[01]<br>PREFACE</div>
+        <div class="tab tab-2" style="z-index: 3;" onclick="switchTab('tab2', this)">[02]<br>GLOSSARY</div>
+        <div class="tab tab-3" style="z-index: 2;" onclick="switchTab('tab3', this)">[03]<br>FACTIONS</div>
+        <div class="tab tab-4" style="z-index: 1;" onclick="switchTab('tab4', this)">[04]<br>ARCHIVES</div>
+    </div>
+
+    <div class="content-area">
+               <div id="tab1" class="tab-content active">
+            <h2>概述</h2>
+            
+                    <div class="typewriter-container">
+                <span class="typewriter-output" id="typing-text"></span><span class="typewriter-cursor"></span>
+                
+                <div class="typewriter-translation" id="typing-translation">
+                    「我們的歷史正在倒退，不，這並不是件值得難過的事。相反，那種舊日的情懷正燃燒我的胸膛，瀰漫在火車的渺渺白煙中。」
+                </div>
+            </div>
+              
+            
+            <p>發生在 24 世紀元年，彼時<span class="highlight-text">第四次世界大戰</span>幾乎耗盡了地球資源，半導體、奈米技術消耗殆盡，人類對資本主義普遍失望，本該飛速發展的科技幾乎停滯不前，改用回了<strong style="color:#1c2d42;">蒸氣機、銅管製品、煤油燈</strong>，以及極少部分的 1984 年電子產品。由於鋼鐵因戰爭產能過剩，因此也成為了房屋的主要建材。</p>
+            
+            <div class="tech-box">
+                <p style="margin-top: 0;">前人們只留下一樣技術，即<strong>「意識留存」</strong>。透過龐大群體所持有的共同願景，可以將記憶之中的歷史人物「純粹化」復現在世上。<br>
+                <span style="font-size: 0.9em; color: #555;">（當所有人的自我意識趨於統一，遺留下來的電波系統就會收集並分析人們思想，從而凝結出「新」的自我意識，並無限接近於這理念的完滿化）</span></p>
+            </div>
+            
+            <p>這是一種極端依賴<strong>集體潛意識與信念</strong>的技術。當大量人類對某個歷史人物或象徵意念產生強烈共鳴時，殘存於空中的電磁波會自動啟動一種古老的模擬運算機制。那些想像與信念將被收集、重組、純化——直到具象化為一個<strong>「新人格」</strong>的誕生。<span style="font-size: 0.9em; color: #555;">（通常會以「歷史名人」的形象誕生，並且這些人都會掌握一個不同的核心概念）</span></p>
+            
+            <p>而能做到以此成為歷史政權的，也只有<span class="highlight-text">「舊蘇聯」</span>能做到，它再次帶領人類重回團結集體的時代，組成<strong>「二蘇聯」</strong>的新政體統領全球。「弗拉迪米爾·伊里奇·烏里揚諾夫」不再存活於人們妄想裡，而是以一臺巨大的蒸汽機形象重回人類眼前。</p>
+            
+            <p>而除此之外，世界上也誕生了許多蒸氣機器人，用以承載那些「復現」出的歷史人物，大多擁有滿是齒輪的機械身體、矽膠仿製臉皮、機油的進食裝置，此類人種又被稱為<strong>「回夢人」</strong>，意旨「回憶舊夢之人」。</p>
+            
+            <div style="background: rgba(0,0,0,0.03); border-left: 3px solid var(--tab-black); padding: 10px; margin-top: 25px; margin-bottom: 25px;">
+                <p style="margin: 0; font-size: 0.95rem;">
+                    <span class="annotation-stamp">SUPPLEMENT</span> 
+                    <strong>補充：</strong>愈純粹的虛構人物，被復現出來碳基程度化會愈高，也就更接近人類。本質上這類「回夢人」並不屬於真實存在過的人物，不能執行「上傳」的機械飛升，他們之所以能看似活在世上，完全是因為眾人對於他們的<strong>「信仰」</strong>，使得「意識留存」記住了這樣的形象，透過轉換成腦電波方式輸入進每個人的腦子裡，使得眾人能夠「看到」他們。
+                </p>
+            </div>
+            
+                       <div class="secret-module">
+                
+                <div class="wave-container">
+                    <svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none">
+                        <path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" />
+                    </svg>
+                </div>
+                
+                <div class="lock-interface" id="lock-1">
+                    <p>檢測到高頻腦電波波動，請輸入權限密碼：</p>
+                    <input type="password" id="pwd-1">
+                    <br>
+                    <button onclick="unlock('pwd-1', '新世界人民代表大會', 'secret-1', 'error-1')">檢定</button>
+                    <div id="error-1" class="error-msg">密碼錯誤，同步失敗。</div>
+                </div>
+
+
+                               <div class="unlocked-content" id="secret-1" style="border: none; padding: 0; margin-top: 0;">
+                    <div class="retro-terminal">
+                        <div class="terminal-header">SYS.UPDATE // ARCHIVE_DECRYPTED</div>
+                        <div class="terminal-text" style="display:inline;">
+                            <span id="terminal-typing-text"></span><span class="blinking-cursor" id="terminal-cursor" style="display:none;"></span>
+                        </div>
+                        
+                    </div>
+                </div>
+ </div>
+            
+        </div>
+
+        
+                <div id="tab2" class="tab-content">
+            <h2>專有名詞解釋</h2>
+            
+            <div class="glossary-list">
+                
+                <div class="glossary-item">
+                    <div class="glossary-term">
+                        「回夢人」
+                        <span class="term-en">Historical Mechanical Natural Person</span>
+                    </div>
+                    <div class="glossary-desc">
+                        在《回夢人法案》通過後，正式被納入「人類」的範疇，享有人類的法律保證，物種全稱為「歷史機械自然人」。主要由機械、矽膠、齒輪構成的複合人體，需要定期保養其身體的靈活性，「肢體」都是可更換的。進食不忌，但以液體作為能量轉換的主要手段，除腐蝕性液體外不限種類，以機油為大宗。降世手段不明，最初一批合格化的量產身體由「維克多•巴拉諾夫」欽點並做出規格化。
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">
+                        回夢罐
+                        <span class="term-en">Dream Receptacle Cylinder</span>
+                    </div>
+                    <div class="glossary-desc">
+                        回夢人的前身，除虛構人物外必經演變的過程，「意識留存」會將歷史人物的意識投射到蒸汽機，必須經由後人提取精華後裝進機械身體裡，此前尚存在蒸汽機的型態就叫「回夢罐」。
+                    </div>
+                </div>
+
+                <div class="glossary-item">
+                    <div class="glossary-term">
+                        干擾後的「意識留存」
+                        <span class="term-en">Interfered Consciousness Retention</span>
+                    </div>
+                    <div class="glossary-desc">
+                        可以統合並純化眾人對於虛構人物的「信仰」，透過轉換成腦電波方式輸入進每個人的腦子裡，使得眾人能夠「看到」並「摸到」虛構人物。此類回夢人需要非常強大的「核心概念」，必須是一個類型的總和與代表，如果相關形象實在太過分散，虛構人物有時會統合各類不同的描述，塑造成「一個人」。
+                    </div>
+                </div>
+                    <!-- 詞條 4：核心概念 -->
+                <div class="glossary-item">
+                    <div class="glossary-term">
+                        核心概念
+                        <span class="term-en">Core Concept</span>
+                    </div>
+                    <div class="glossary-desc">
+                        篩選「回夢人」現界的規則，通常是在專有領域出類拔萃，或是足矣代表此類的經典人物，通常會以「個別描述——名詞」的句式出現，其來源不明，存在於回夢人現界的基本常識中，通常由回夢人自己向蘇聯申報，作為他們存在的身份依據。
+                        <br><br>
+                        通常同種概念有且只有一位，如果在提交身份資料時遇見同種類型的人物，雙方都將遭受新克格勃嚴格的審查。
+                    </div>
+                    
+                    <!-- 極樂迪斯科：繼續按鈕 -->
+                    <button class="de-continue-btn" onclick="revealLock('secret-container-2', this)">繼續</button>
+                    
+                    <!-- 隱藏的密碼鎖與終端機區塊 -->
+                    <div id="secret-container-2" style="display: none;">
+                        <div class="secret-module">
+                            <div class="wave-container">
+                                <svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none">
+                                    <path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" />
+                                </svg>
+                            </div>
+                            
+                            <div class="lock-interface" id="lock-2">
+                                <p>檢測到核心概念變異，請輸入權限密碼：</p>
+                                <input type="password" id="pwd-2">
+                                <br>
+                                <button onclick="unlock2('pwd-2', '天基武器', 'secret-2', 'error-2')">檢定</button>
+                                <div id="error-2" class="error-msg">密碼錯誤，同步失敗。</div>
+                            </div>
+
+                            <div class="unlocked-content" id="secret-2" style="border: none; padding: 0; margin-top: 0;">
+                                <div class="retro-terminal">
+                                    <div class="terminal-header">SYS.UPDATE // CONCEPT_MUTATION</div>
+                                    <div class="terminal-text" style="display:inline;">
+                                        <span id="terminal-typing-text-2"></span><span class="blinking-cursor" id="terminal-cursor-2" style="display:none;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 詞條 5：回夢場 (存疑項目) -->
+                <div class="glossary-item corrupted-item">
+                    <div class="glossary-term glitch-text" style="color: var(--de-red);">
+                        「回夢場」 <span style="font-size: 0.7em;">(該條目存疑)</span>
+                        <span class="term-en">Dreamscape Anomaly</span>
+                    </div>
+                    <div class="glossary-desc">
+                        近來有許多民間科學家認為，既然干擾後的「意識留存」可以復現歷史或虛構人物，那理論上相關場所也能存在於世，不以人格化的身份現身，而是保有它原來的型態，融入一般民眾的生活。例如：布達佩斯大飯店、奧林帕斯山、金閣寺……現在科學界尚未有定論，純屬猜測。
+                    </div>
+                    
+                    <button class="de-continue-btn" onclick="revealLock('secret-container-3', this)" style="background: linear-gradient(90deg, #111 0%, #333 100%); border: 1px solid var(--de-red);">繼續</button>
+                    
+                    <div id="secret-container-3" style="display: none;">
+                        <div class="secret-module" style="border-color: var(--de-red);">
+                            <div class="wave-container"><svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" stroke="var(--de-red)"/></svg></div>
+                            <div class="lock-interface" id="lock-3">
+                                <p style="color: var(--de-red);">權限異常，請輸入覆寫密碼：</p>
+                                <input type="password" id="pwd-3" style="border-color: var(--de-red); color: var(--de-red);">
+                                <br>
+                                <button onclick="unlock3('pwd-3', '回夢場大討論會', 'secret-3', 'error-3')" style="border-color: var(--de-red); color: var(--de-red);">檢定</button>
+                                <div id="error-3" class="error-msg">密碼錯誤，拒絕存取。</div>
+                            </div>
+                            <div class="unlocked-content" id="secret-3" style="border: none; padding: 0; margin-top: 0;">
+                                <div class="retro-terminal">
+                                    <div class="terminal-header" style="color: var(--de-red); border-color: var(--de-red); text-shadow: 0 0 5px var(--de-red);">SYS.OVERRIDE // CLASSIFIED_MEETING</div>
+                                    <div class="terminal-text" style="display:inline; color: var(--de-red); text-shadow: 0 0 3px var(--de-red);">
+                                        <span id="terminal-typing-text-3" style="white-space: pre-wrap;"></span><span class="blinking-cursor" id="terminal-cursor-3" style="display:none; background-color: var(--de-red); box-shadow: 0 0 5px var(--de-red);"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 詞條 6：蒙娜麗莎的微笑 (存疑項目) -->
+                <div class="glossary-item corrupted-item">
+                    <div class="glossary-term glitch-text" style="color: var(--de-red);">
+                        「蒙娜麗莎的微笑」 <span style="font-size: 0.7em;">(該條目存疑)</span>
+                        <span class="term-en">Mona Lisa Syndrome</span>
+                    </div>
+                    <div class="glossary-desc">
+                        藍絲絨•雷內桑斯為首例病例，以他為首在小範圍內會傳播類似症狀，與他相關人士都會感染，由尤里•加加林蒐集並統整了相關發病徵兆。
+                    </div>
+                    
+                    <button class="de-continue-btn" onclick="revealLock('secret-container-4', this)" style="background: linear-gradient(90deg, #111 0%, #333 100%); border: 1px solid var(--de-red);">繼續</button>
+                    
+                    <div id="secret-container-4" style="display: none;">
+                        <div class="secret-module" style="border-color: var(--de-red);">
+                            <div class="wave-container"><svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" stroke="var(--de-red)"/></svg></div>
+                            <div class="lock-interface" id="lock-4">
+                                <p style="color: var(--de-red);">解鎖機密徵兆，請輸入授權密碼：</p>
+                                <input type="password" id="pwd-4" style="border-color: var(--de-red); color: var(--de-red);">
+                                <br>
+                                <button onclick="unlock4('pwd-4', '藍絲絨•雷內桑斯', 'secret-4', 'error-4')" style="border-color: var(--de-red); color: var(--de-red);">檢定</button>
+                                <div id="error-4" class="error-msg">密碼錯誤，拒絕存取。</div>
+                            </div>
+                            <div class="unlocked-content" id="secret-4" style="border: none; padding: 0; margin-top: 0;">
+                                <div class="retro-terminal">
+                                    <div class="terminal-header" style="color: var(--de-red); border-color: var(--de-red); text-shadow: 0 0 5px var(--de-red);">SYS.OVERRIDE // SYMPTOM_LOG</div>
+                                    <div class="terminal-text" style="display:inline; color: var(--de-red); text-shadow: 0 0 3px var(--de-red);">
+                                        <span id="terminal-typing-text-4" style="white-space: pre-wrap;"></span><span class="blinking-cursor" id="terminal-cursor-4" style="display:none; background-color: var(--de-red); box-shadow: 0 0 5px var(--de-red);"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 詞條 7：仿生動物 -->
+                <div class="glossary-item">
+                    <div class="glossary-term">
+                        仿生動物
+                        <span class="term-en">Bionic Entities</span>
+                    </div>
+                    <div class="glossary-desc">
+                        回夢人屬於仿生動物，他們基本與人類無異，特別是在想像、做夢、腎上腺素、多巴胺、腦內啡跟神經感知等等，幾乎沒有差別。<br><br>
+                        但同時又有微妙的不同，類似的意思有進化、分析、二次再造、現實置換等等。
+                    </div>
+                    
+                    <!-- 點擊展開剩餘文本的繼續按鈕 -->
+                    <button class="de-continue-btn" onclick="revealLock('extend-content-1', this)">繼續</button>
+                    
+                    <!-- 隱藏的後半段補充文本 -->
+                    <div id="extend-content-1" style="display: none;">
+                        <div class="glossary-desc" style="margin-top: 15px; border-top: 1px dashed rgba(0,0,0,0.2); padding-top: 15px;">
+                            回夢人其實並不具備真正的大腦，屬完全液體狀，由裝在「回夢罐」的靈魂物質構成。<br><br>
+                            但，因為本質屬「仿生動物」他們仍然會頭痛、會有人類的器官反應（關於腎上腺素跟多巴胺感知，比較像一種類比，例如用自己已知的味覺，去描述一個從未吃過的食物）不過感知效果會比正統人類弱很多，並且感受會比較籠統跟不明確，需要大量比喻去描述自己的內心。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 詞條 8：語言系統 -->
+                <div class="glossary-item">
+                    <div class="glossary-term">
+                        語言系統
+                        <span class="term-en">Linguistic System</span>
+                    </div>
+                    <div class="glossary-desc">
+                        回夢人沒有具體血肉器官，但依然使用傳統的語言描述「心理反應」。因為他們生前屬於真實活過的人類，思考方式自然會用生前的感受做對比跟比喻。同時，回夢人都是歷史名人，大部分人過去都擁有相當完整的生活，要讓他們迅速接受另一套生活語境極度困難。
+                    </div>
+                    
+                    <!-- 點擊展開剩餘文本的繼續按鈕 -->
+                    <button class="de-continue-btn" onclick="revealLock('extend-content-2', this)">繼續</button>
+                    
+                    <!-- 隱藏的後半段補充文本 -->
+                    <div id="extend-content-2" style="display: none;">
+                        <div class="glossary-desc" style="margin-top: 15px; border-top: 1px dashed rgba(0,0,0,0.2); padding-top: 15px;">
+                            只有少數虛構人物：<strong style="color: var(--tab-blue);">夏洛克•福爾摩斯</strong>、<strong style="color: var(--tab-blue);">湯姆•索亞</strong>這類人，以及像<strong style="color: var(--tab-blue);">維克多•巴拉諾夫</strong>這樣的技術奠基者，才有可能選擇性的接受一些全新的術語，這批人也是最了解回夢人真實構造和生理知識的人。
+                        </div>
+                    </div>
+                </div>
+
+  </div>
+            </div>
+
+                     <div id="tab3" class="tab-content">
+            
+            <div class="faction-selector-container" style="margin-bottom: 15px;">
+                <div class="faction-grid">
+                    <button class="faction-btn active" onclick="switchFaction('faction-1', this)">回夢人互助協會</button>
+                    <button class="faction-btn" onclick="switchFaction('faction-2', this)">蘇聯律賊</button>
+                    <button class="faction-btn" onclick="switchFaction('faction-3', this)">二蘇聯(新克格勃)</button>
+                    <button class="faction-btn" onclick="switchFaction('faction-4', this)">國際刑警組織</button>
+                    <button class="faction-btn" onclick="switchFaction('faction-5', this)">眾心萬民會</button>
+                    <button class="faction-btn" onclick="switchFaction('faction-6', this)">布達佩斯大飯店</button>
+                </div>
+            </div>
+            
+            <div class="faction-divider" style="margin: 15px 0 25px 0;"></div>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div class="faction-title">官方記錄活躍組織</div>
+                <div class="faction-subtitle" style="margin-bottom: 0;">請選擇上方陣營以調閱詳細檔案</div>
+            </div>
+            
+                       <!-- 對應的陣營內容區塊 -->
+            <div id="faction-1" class="faction-content active">
+                <h3 class="faction-header-style">◇ 憶境聯盟：回夢人互助協會 ◇</h3>
+                
+                <!-- 協會介紹 -->
+                <div style="background: rgba(28, 45, 66, 0.05); padding: 15px 20px; border-left: 4px solid var(--tab-blue); margin-bottom: 20px; line-height: 1.8; color: #333;">
+                    獨屬於保障「回夢人」社會福利的俱樂部，由夏洛克•福爾摩斯發想，尤里•加加林擔任其中的榮譽領導人而成。意旨在於幫助「回夢人」能更好的融入社會，提供工作機會、創業基金、人身保險和器官修理等等，每週會定期舉行團契活動，進而衍生出爭取修訂法案等集會行為。<br><br>
+                    內部政治意識型態複雜，從極左到極右都有，但在禮節上大家都會互相包容，對自身「非人類」的現狀十分清楚，會稍微收斂自己的觀點，彼此也都保持著合作橋樑。
+                </div>
+
+                <!-- 點擊展開成員名單的按鈕 -->
+                <button class="de-continue-btn" onclick="revealLock('roster-1', this)" style="background: linear-gradient(90deg, var(--tab-blue) 0%, #0d1723 100%);">調閱成員檔案</button>
+
+                <!-- 隱藏的成員列表 -->
+                <div id="roster-1" style="display: none; margin-top: 25px;">
+                    
+                    <!-- 檔案卡 1：尤里•加加林 -->
+                    <div style="border: 1px solid rgba(0,0,0,0.1); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);">
+                        <!-- 標題列 -->
+                        <div style="background: var(--tab-blue); color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                            <div>
+                                <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">尤里•加加林</span>
+                                <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">Юрий Алексеевич Гагарин</span>
+                            </div>
+                            <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[復現]</span>
+                        </div>
+                        <!-- 內容列 -->
+                        <div style="padding: 20px;">
+                            <p style="margin-top: 0;"><strong>【核心概念】</strong> <span style="color: var(--tab-blue); font-weight: bold;">「睥睨群星之人——太空」</span></p>
+                            <p style="line-height: 1.8;">蘇聯紅軍太空人，巨大蒸氣機「列寧」的副產物。名面上世界第一個誕生的「回夢人」，生性樂觀、做事認真，經常發現微小細節，擁有莫大的勇氣與實踐能力。「回夢人互助協會」的榮譽領導人，被後來的「回夢人」當作其活動的核心人物，儘管沒有實權卻非常受人景仰。</p>
+                            
+                            <!-- 尤里的密碼鎖 -->
+                            <div class="secret-module" style="margin-bottom: 0;">
+                                <div class="wave-container"><svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" stroke="var(--de-cyan)"/></svg></div>
+                                <div class="lock-interface" id="lock-yuri">
+                                    <p>檢測到個體狀態變更，請輸入權限密碼：</p>
+                                    <input type="password" id="pwd-yuri">
+                                    <br>
+                                    <button onclick="unlockYuri('pwd-yuri', '尤里•加加林自殺', 'secret-yuri', 'error-yuri')">檢定</button>
+                                    <div id="error-yuri" class="error-msg">密碼錯誤，同步失敗。</div>
+                                </div>
+                                <div class="unlocked-content" id="secret-yuri" style="border: none; padding: 0; margin-top: 0;">
+                                    <div class="retro-terminal">
+                                        <div class="terminal-header">SYS.UPDATE // DECEASED_LOG</div>
+                                        <div class="terminal-text" style="display:inline;">
+                                            <span id="typing-yuri"></span><span class="blinking-cursor" id="cursor-yuri" style="display:none;"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 檔案卡 2：維克多•巴拉諾夫 -->
+                    <div style="border: 1px solid rgba(0,0,0,0.1); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);">
+                        <!-- 標題列 -->
+                        <div style="background: var(--tab-green); color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                            <div>
+                                <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">維克多•巴拉諾夫</span>
+                                <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">Виктор Иванович Баранов</span>
+                            </div>
+                            <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[復現]</span>
+                        </div>
+                        <!-- 內容列 -->
+                        <div style="padding: 20px;">
+                            <p style="margin-top: 0;"><strong>【核心概念】</strong> <span style="color: var(--tab-green); font-weight: bold;">「通曉近十二種學科結晶——貨幣」</span></p>
+                            <p style="line-height: 1.8;">蘇聯 880 先生、造假鈔的天才工程師。創造了「回夢人」第一具機械身體，為後世奠定規格基礎，並建立發射塔台干擾了「意識留存」的頻波數據，使得虛構人物也有機會現世。在化學方面與 <em>夏洛克•福爾摩斯</em> 非常聊的來。</p>
+                            
+                            <!-- 維克多無密碼解鎖按鈕 -->
+                            <button class="de-continue-btn" onclick="unlockVictor('secret-victor', this)" style="background: linear-gradient(90deg, var(--tab-green) 0%, #172414 100%); margin-top: 15px; font-size: 1rem; padding: 10px 20px;">檢視職務更新</button>
+                            
+                            <div id="secret-victor" style="display: none; margin-top: 15px;">
+                                <div class="retro-terminal">
+                                    <div class="terminal-header" style="color: var(--de-cyan); border-color: var(--de-cyan);">SYS.UPDATE // ROSTER_LOG</div>
+                                    <div class="terminal-text" style="color: var(--de-cyan); display:inline;">
+                                        <span id="typing-victor"></span><span class="blinking-cursor" id="cursor-victor" style="display:inline;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                                        <!-- 檔案卡 3：夏洛克•福爾摩斯 -->
+                    <div style="border: 1px solid rgba(0,0,0,0.1); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);">
+                        <div style="background: #2b2b2b; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                            <div>
+                                <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">夏洛克•福爾摩斯</span>
+                                <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">Sherlock Holmes</span>
+                            </div>
+                            <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[復現]</span>
+                        </div>
+                        <div style="padding: 20px;">
+                            <p style="margin-top: 0;"><strong>【核心概念】</strong> <span style="color: #2b2b2b; font-weight: bold;">「永世不衰的真相探明者——偵探」</span></p>
+                            <p style="line-height: 1.8;">來自英國的「回夢人」，也是歷史上第一次虛構人物成為現實的壯舉。棕髮背頭狼尾、鑽石臉、灰色瞳孔，穿著帶有披肩的褐色格紋風衣，手持黑色煙斗。<br><br>因為午後的一份來自同胞的委託，構思了「回夢人互助協會」的藍圖，卻從未參與其建設和團契，只是定期會到俱樂部去抽菸，順便解決委託。<br><br>因為是虛構人物復現於現實，在「意識留存」上會有認知模糊，外貌上非常接近現階段的碳基人類，只是在脖子處有機械人的金屬材料，另配備一個腦機接口。<br><br><span style="color: #666;">P.s.：被發現意外喜歡吃英式司康，儘管當事人對此只是微笑，並堅決不談此事。</span></p>
+                            
+                            <!-- 夏洛克無密碼解鎖按鈕 -->
+                            <button class="de-continue-btn" onclick="unlockSherlock1('secret-sherlock-1', this)" style="background: linear-gradient(90deg, #2b2b2b 0%, #111 100%); margin-top: 15px; font-size: 1rem; padding: 10px 20px;">檢視職務更新</button>
+                            <div id="secret-sherlock-1" style="display: none; margin-top: 15px;">
+                                <div class="retro-terminal">
+                                    <div class="terminal-header" style="color: var(--de-cyan); border-color: var(--de-cyan);">SYS.UPDATE // ROSTER_LOG</div>
+                                    <div class="terminal-text" style="color: var(--de-cyan); display:inline;">
+                                        <span id="typing-sherlock-1"></span><span class="blinking-cursor" id="cursor-sherlock-1" style="display:inline;"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 夏洛克有密碼解鎖 (紅色警報) -->
+                            <div class="secret-module" style="margin-bottom: 0; margin-top: 20px; border-color: var(--de-red);">
+                                <div class="wave-container"><svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" stroke="var(--de-red)"/></svg></div>
+                                <div class="lock-interface" id="lock-sherlock-2">
+                                    <p style="color: var(--de-red);">檢測到致命停機訊號，請輸入權限密碼：</p>
+                                    <input type="password" id="pwd-sherlock-2" style="border-color: var(--de-red); color: var(--de-red);">
+                                    <br>
+                                    <button onclick="unlockSherlock2('pwd-sherlock-2', '夏洛克福爾摩斯之死', 'secret-sherlock-2', 'error-sherlock-2')" style="border-color: var(--de-red); color: var(--de-red);">檢定</button>
+                                    <div id="error-sherlock-2" class="error-msg">權限不足。</div>
+                                </div>
+                                <div class="unlocked-content" id="secret-sherlock-2" style="border: none; padding: 0; margin-top: 0;">
+                                    <div class="retro-terminal">
+                                        <div class="terminal-header" style="color: var(--de-red); border-color: var(--de-red); text-shadow: 0 0 5px var(--de-red);">SYS.CRITICAL // DECEASED_LOG</div>
+                                        <div class="terminal-text" style="display:inline; color: var(--de-red); text-shadow: 0 0 3px var(--de-red);">
+                                            <span id="typing-sherlock-2" style="white-space: pre-wrap;"></span><span class="blinking-cursor" id="cursor-sherlock-2" style="display:none; background-color: var(--de-red); box-shadow: 0 0 5px var(--de-red);"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 檔案卡 4：馬克•吐溫＆湯姆•索亞 -->
+                    <div style="border: 1px solid rgba(0,0,0,0.1); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);">
+                        <div style="background: #6e4e37; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                            <div>
+                                <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">馬克•吐溫 ＆ 湯姆•索亞</span>
+                                <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">Mark Twain & Tom Sawyer</span>
+                            </div>
+                            <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[復現]</span>
+                        </div>
+                        <div style="padding: 20px;">
+                            <p style="margin-top: 0;"><strong>【共用核心概念】</strong> <span style="color: #6e4e37; font-weight: bold;">「晚間夢見兒時的笑靨——遊歷」</span></p>
+                            <p style="line-height: 1.8;">歷史與虛構人物同時現界的一對搭檔組，在巴拉諾夫的幫助下，馬克•吐溫被改裝成具有強大外型的蒸汽機械，用來更好的保護身為虛構人物的小男孩湯姆•索亞。也是目前唯一能共用核心概念的組合。</p>
+                            <ul style="line-height: 1.8; color: #333; padding-left: 20px;">
+                                <li><strong>馬可•吐溫：</strong>身高超過三公尺、重達一百多公斤。儘管被復現出來時心理年齡已高，卻保有年輕人的活力與激情，對於自己的身體雖嫌笨重但還算滿意。美中不足的是，因為資源匱乏且保養困難，<em style="color: #6e4e37;">馬克•吐溫</em> 被迫顯得少言，只有在危機關頭時才會說話，大多數時候都是與他同心一體的 <em style="color: #6e4e37;">湯姆•索亞</em> 為他發言。</li>
+                                <li style="margin-top: 10px;"><strong>湯姆•索亞：</strong>性格有些頑皮且捉摸不定的小男孩，有著金髮藍眼、穿著牛仔吊帶褲，面部上有些雀斑，在後腦勺有機械化部分，其餘看上去與正常孩子無異。經常攀坐在 <em style="color: #6e4e37;">馬克•吐溫</em> 的手臂上盪鞦韆玩，常會狀似無意的提出鬼靈精怪的好點子。</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- 檔案卡 5：艾薩克•牛頓 -->
+                    <div style="border: 1px solid rgba(0,0,0,0.1); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);">
+                        <div style="background: #2e3e4f; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                            <div>
+                                <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">艾薩克•牛頓</span>
+                                <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">Isaac Newton</span>
+                            </div>
+                            <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[復現]</span>
+                        </div>
+                        <div style="padding: 20px;">
+                            <p style="margin-top: 0;"><strong>【核心概念】</strong> <span style="color: #2e3e4f; font-weight: bold;">「蘋果墜落的哲學原理——定律」</span></p>
+                            <p style="line-height: 1.8;">作為三大定律的發現人、鑄幣場主管，他擁有不輸給 <em>夏洛克•福爾摩斯</em> 的推理和實踐能力，計謀與暴力手段甚至更勝對方一籌。此時的他已經歷過鍊金術失敗的 25 年時光，因此對回夢人的未來前景變得非常悲觀。脾氣相比晚年，在重生後稍微穩定了一些，但仍舊保留著毒舌、極重的報復心、以及為弱者伸張正義的善良。<br><br>在回夢人互助協會中算是獨一份的存在，極少與俱樂部其他成員有密切交流，卻管著整個回夢人互助協會的財政開支。<br><br>白髮黑瞳，在他的要求下保留了矽膠面部的五官，左側髮有兩個金屬環作為裝飾，穿著帶有金屬皮扣的黑色風衣。</p>
+                            
+                            <!-- 牛頓無密碼解鎖按鈕 -->
+                            <button class="de-continue-btn" onclick="unlockNewton('secret-newton', this)" style="background: linear-gradient(90deg, #2e3e4f 0%, #1a242f 100%); margin-top: 15px; font-size: 1rem; padding: 10px 20px;">檢視職務更新</button>
+                            <div id="secret-newton" style="display: none; margin-top: 15px;">
+                                <div class="retro-terminal">
+                                    <div class="terminal-header" style="color: var(--de-cyan); border-color: var(--de-cyan);">SYS.UPDATE // ROSTER_LOG</div>
+                                    <div class="terminal-text" style="color: var(--de-cyan); display:inline;">
+                                        <span id="typing-newton"></span><span class="blinking-cursor" id="cursor-newton" style="display:inline;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> <!-- 隱藏名單結尾 -->
+
+            </div>
+
+            
+                       <!-- 陣營 2：蘇聯律賊 -->
+                   <!-- 陣營 2：蘇聯律賊 -->
+        <div id="faction-2" class="faction-content">
+            <h3 class="faction-header-style">◇ 蘇聯律賊 ◇</h3>
+            
+            <p style="line-height: 1.8; margin-bottom: 20px;">即便經受了第四次世界大戰的洗禮，見證資本主義和無數政權的倒台，蘇聯律賊仍是屹立不倒的佼佼者，黑幫變得更加團結，不僅成立了自己的基金會，還形成完整的走私產業鏈，為岌岌可危的世界造成更多混亂。</p>
+            
+            <!-- 地下黑幫的鐵則排版 (已修復多餘的損壞 div 標籤) -->
+            <div class="vory-code-box">
+                <div style="color: var(--de-red); font-family: 'Courier New', monospace; font-size: 1.1rem; font-weight: bold; border-bottom: 1px dashed #555; padding-bottom: 10px; margin-bottom: 15px; letter-spacing: 2px;">【律賊鐵則 VORY CODE】</div>
+                
+                <ol style="padding-left: 20px; line-height: 1.8; margin: 0; font-family: 'LXGW WenKai TC', serif; color: #e0d8c3;">
+                    <li style="margin-bottom: 10px;">律賊應棄絕包括父母兄弟在內的所有親人，並且不許結婚成家。</li>
+                    <li style="margin-bottom: 10px;">律賊在任何情況下都不能從事任何合法勞動，生活來源只能依靠犯罪、賭博和其他罪犯的供養。</li>
+                    <li>律賊不得與政府發生任何形式的關係與合作，不得以任何形式為官方和軍警提供任何服務，不得從事任何對社會有益的事業。</li>
+                </ol>
+            </div>
+            
+            <!-- 點擊展開領袖檔案的按鈕 -->
+            <button class="de-continue-btn" onclick="revealLock('roster-2', this)" style="background: linear-gradient(90deg, #5c1e1b 0%, #111 100%);">調閱領袖檔案</button>
+
+            <!-- 隱藏的領袖檔案區塊 -->
+            <div id="roster-2" style="display: none; margin-top: 25px;">
+                
+                <div style="border: 1px solid rgba(0,0,0,0.8); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.1);">
+                    <!-- 標題列 -->
+                    <div style="background: #5c1e1b; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                        <div>
+                            <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">葉夫西•鮑里索維奇•阿格隆</span>
+                            <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">Евсей Борисович Агрон</span>
+                        </div>
+                        <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[復現]</span>
+                    </div>
+                    
+                    <!-- 內容列 -->
+                    <div style="padding: 20px;">
+                        <p style="margin-top: 0; color: #5c1e1b; font-weight: bold; font-size: 1.1rem;">「紅色黑手黨」領袖</p>
+                        <p style="line-height: 1.8;">律賊重組後的第一把交椅，被福爾摩斯稱為「蘇聯的莫里亞蒂」。<br><br>性格節儉、狠毒，沒有一般劫匪的樣子，行為舉止像個教授或商人，言談舉止十分優雅，不斷斂取財務卻不懂得享受，極度聰明陰險但思維模式固定。</p>
+                        <p style="margin-top: 15px; background: rgba(92, 30, 27, 0.05); padding: 10px; border-left: 3px solid #5c1e1b;"><strong>【核心概念】</strong> <span style="color: #5c1e1b; font-weight: bold;">「流淌紅色血液的高空陰影——黑幫」</span></p>
+                        
+                        <!-- 阿格隆的機密檔案鎖 (已修復重複的結構) -->
+                        <div class="secret-module" style="margin-bottom: 0; margin-top: 20px; border-color: var(--de-red);">
+                            <div class="wave-container"><svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" stroke="var(--de-red)"/></svg></div>
+                            <div class="lock-interface" id="lock-agron">
+                                <p style="color: var(--de-red);">權限請求：調閱官方機密戰役記錄</p>
+                                <input type="password" id="pwd-agron" style="border-color: var(--de-red); color: var(--de-red);">
+                                <br>
+                                <button onclick="unlockAgron('pwd-agron', '大笨鐘', 'secret-agron', 'error-agron')" style="border-color: var(--de-red); color: var(--de-red);">調閱</button>
+                                <div id="error-agron" class="error-msg">權限不足。</div>
+                            </div>
+                            
+                            <div class="unlocked-content" id="secret-agron" style="border: none; padding: 0; margin-top: 0;">
+                                <div class="retro-terminal">
+                                    <div class="terminal-header" style="color: var(--de-red); border-color: var(--de-red); text-shadow: 0 0 5px var(--de-red);">SYS.CRITICAL // OPERATION_BIG_BEN</div>
+                                    <div class="terminal-text" style="display:inline; color: var(--de-red); text-shadow: 0 0 3px var(--de-red);">
+                                        <span id="typing-agron"></span><span class="blinking-cursor" id="cursor-agron" style="display:none; background-color: var(--de-red); box-shadow: 0 0 5px var(--de-red);"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            
+                             
+                                   
+                                    
+                                    
+                                    
+                                    
+             
+                              
+            
+            <div id="faction-3" class="faction-content">
+    <h3 class="faction-header-style">◇ 二蘇聯（新克格勃） ◇</h3>
+    
+    <div style="background: rgba(211, 56, 51, 0.05); padding: 15px 20px; border-left: 4px solid var(--de-red); margin-bottom: 20px; line-height: 1.8; color: #333;">
+        計劃經濟的重啟者，聽命於「回夢人」「弗拉迪米爾·伊里奇·烏揚諾夫」的全面指揮，勢力範圍遍佈全球，每個階層都有他們的影子，重回手眼通天的諜報榮耀。主要活動範圍落在前俄羅斯、前中國跟前北美地區，在其他舊國家至少會設立一座克格勃分部。<br><br>
+        <strong>衍生派系：</strong>政治局、檢察院、新內務部
+    </div>
+
+    <button class="de-continue-btn" onclick="revealLock('roster-3', this)" style="background: linear-gradient(90deg, var(--de-red) 0%, #5c1e1b 100%);">調閱機密檔案</button>
+
+    <div id="roster-3" style="display: none; margin-top: 25px;">
+        
+        <div style="border: 1px solid rgba(0,0,0,0.1); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);">
+            <div style="background: var(--de-red); color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                <div>
+                    <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">「列寧」弗拉迪米爾・伊里奇・烏里揚諾夫</span>
+                    <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">Владимир Ильич Ульянов / Ленин</span>
+                </div>
+                <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[復現]</span>
+            </div>
+            <div style="padding: 20px;">
+                <p style="margin-top: 0; line-height: 1.8;">蒸汽機械的承載體，寄託著蘇聯與世界的夢想。</p>
+                <p><strong>【核心概念】</strong> <span style="color: var(--de-red); font-weight: bold;">「第三國際的先驅人、實踐者、革命家——蘇聯」</span></p>
+
+                <div class="secret-module" style="margin-bottom: 0; margin-top: 20px; border-color: var(--de-red);">
+                    <div class="wave-container"><svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" stroke="var(--de-red)"/></svg></div>
+                    <div class="lock-interface" id="lock-lenin">
+                        <p style="color: var(--de-red);">檢測到高層級協議，請輸入權限密碼：</p>
+                        <input type="password" id="pwd-lenin" style="border-color: var(--de-red); color: var(--de-red);">
+                        <br>
+                        <button onclick="unlockLenin('pwd-lenin', '二蘇聯解體', 'secret-lenin', 'error-lenin')" style="border-color: var(--de-red); color: var(--de-red);">檢定</button>
+                        <div id="error-lenin" class="error-msg">密碼錯誤，拒絕存取。</div>
+                    </div>
+                    <div class="unlocked-content" id="secret-lenin" style="border: none; padding: 0; margin-top: 0;">
+                        <div class="retro-terminal">
+                            <div class="terminal-header" style="color: var(--de-red); border-color: var(--de-red); text-shadow: 0 0 5px var(--de-red);">SYS.UPDATE // ARCHIVE_LOG</div>
+                            <div class="terminal-text" style="display:inline; color: var(--de-red); text-shadow: 0 0 3px var(--de-red);">
+                                <span id="typing-lenin"></span><span class="blinking-cursor" id="cursor-lenin" style="display:none; background-color: var(--de-red); box-shadow: 0 0 5px var(--de-red);"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="border: 1px solid rgba(0,0,0,0.1); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);">
+            <div style="background: #4a5c68; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                <div>
+                    <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">弗拉基米爾•卡利尼琴科</span>
+                    <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">Владимир Калиниченко</span>
+                </div>
+                <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[復現]</span>
+            </div>
+            <div style="padding: 20px;">
+                <p style="margin-top: 0;"><strong>【核心概念】</strong> <span style="color: #4a5c68; font-weight: bold;">「為祖國埋葬染血的百合——正義」</span></p>
+                <p style="line-height: 1.8;">因各種原因加入克格勃的前檢察院高級調查員，在歷史上曾解決了諸多起蘇聯大案，原來即將提拔成國家安全總委員，但本人更有意願留在基層，經常進行外派調查工作。</p>
+                <p style="line-height: 1.8;">能夠跳脫舊有框架思考，腦子靈活又富有勇敢無畏精神，時常隨身帶著便條紙以便記錄。<br>知道舊蘇聯的腐敗體制帶來了何等影響，因此向上級建議對與克格勃至肘的國際刑警組織採恩威並施態度，既不主動打壓他們，也不施予過多的權力。</p>
+                <p style="line-height: 1.8; color: #555;">加入克格勃的原因是與蒸汽機列寧有過幾次談話，沒有相關紀錄顯示他們曾經談過了什麼。對回夢人的態度跟對唐•哈特曼的態度一樣，都是以利益為導向、以和平為主軸的相處方式，但也曾對唐•哈特曼坦白過他們之間有不可調和的矛盾。</p>
+
+                <div class="secret-module" style="margin-bottom: 0; margin-top: 20px; border-color: var(--de-cyan);">
+                    <div class="wave-container"><svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" stroke="var(--de-cyan)"/></svg></div>
+                    <div class="lock-interface" id="lock-vladimir">
+                        <p style="color: var(--de-cyan);">檢測到人格狀態變更，請輸入權限密碼：</p>
+                        <input type="password" id="pwd-vladimir" style="border-color: var(--de-cyan); color: var(--de-cyan);">
+                        <br>
+                        <button onclick="unlockVladimir('pwd-vladimir', '百合花', 'secret-vladimir', 'error-vladimir')" style="border-color: var(--de-cyan); color: var(--de-cyan);">檢定</button>
+                        <div id="error-vladimir" class="error-msg">密碼錯誤，同步失敗。</div>
+                    </div>
+                    <div class="unlocked-content" id="secret-vladimir" style="border: none; padding: 0; margin-top: 0;">
+                        <div class="retro-terminal">
+                            <div class="terminal-header" style="color: var(--de-cyan); border-color: var(--de-cyan);">SYS.UPDATE // PERSONALITY_SHIFT</div>
+                            <div class="terminal-text" style="display:inline; color: var(--de-cyan);">
+                                <span id="typing-vladimir"></span><span class="blinking-cursor" id="cursor-vladimir" style="display:none; background-color: var(--de-cyan); box-shadow: 0 0 5px var(--de-cyan);"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> 
+</div>
+
+            
+           <div id="faction-4" class="faction-content">
+    <h3 class="faction-header-style">◇ 國際刑警組織 ◇</h3>
+    
+    <!-- 陣營背景介紹 -->
+    <div style="background: rgba(28, 59, 87, 0.05); padding: 15px 20px; border-left: 4px solid #1c3b57; margin-bottom: 20px; line-height: 1.8; color: #333;">
+        屬於美國為首的資本主義最後的希望，來自第四次世界大戰瓦解的組織殘員，努力與新克格勃抗衡，與二蘇聯是合作關係，卻非常想挖掘「回夢人」的秘密。<br><br>目前仍然不具有執法權，表面上嚴禁任何政治、軍事、宗教或種族性質的干預或活動，但在後戰爭時代，有幾位成員收購了槍枝等類準備暗中反擊。
+    </div>
+
+    <!-- 點擊展開成員名單的按鈕 -->
+    <button class="de-continue-btn" onclick="revealLock('roster-4', this)" style="background: linear-gradient(90deg, #1c3b57 0%, #0d1e2e 100%);">調閱機密檔案</button>
+
+    <!-- 隱藏的成員列表 -->
+    <div id="roster-4" style="display: none; margin-top: 25px;">
+        
+        <!-- 檔案卡 1：唐•哈特曼 -->
+        <div style="border: 1px solid rgba(0,0,0,0.1); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);">
+            <div style="background: #1a1a1a; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                <div>
+                    <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">菲尼克斯•唐•阿茲莫維爾•哈特曼</span>
+                    <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">Phoenix Tong Azmoville Hatman</span>
+                </div>
+                <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[特工/黑警]</span>
+            </div>
+            <div style="padding: 20px;">
+                <p style="line-height: 1.8; margin-top: 0;">擁有二分之一美國血統與四分之一西西里島血統，代號<strong>「水百合」</strong>。傳說中能將敵機從高空擊落的狙擊手，儘管這已被夏洛克•福爾摩斯定為謠傳，但確實曾創造出許多共產黨員飛機失事的意外，是「回夢人陰謀論」的前身。</p>
+                <p style="line-height: 1.8;">其身份為國際刑警組織的黑警，為覆滅的CIA工作，以秘密行動打擊新克格勃。表面上不參與政治和宗教鬥爭，但背地裡卻為資本主義的復興做準備。<br><br>出於某些原因，眾人總是以中間名來稱呼這位年輕特工<strong>「唐•哈特曼」</strong>。是國際刑警組織的技術行政人員，行為彬彬有禮、有著舊派詩人的說話方式，無論從什麼角度看都是一位略有些頹廢、但珍視生活的寡言刑警。經常穿著灰棋盤格紋的黑西裝，頭戴圓頂禮帽，棕色中長髮狼尾，經常背著裝有老舊款式的SVD狙擊槍的長皮箱行動，在正面攻堅時會換成燧發槍。</p>
+
+                <!-- 哈特曼的密碼鎖 1：血洗案 -->
+                <div class="secret-module" style="margin-bottom: 0; margin-top: 20px; border-color: var(--de-red);">
+                    <div class="wave-container"><svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" stroke="var(--de-red)"/></svg></div>
+                    <div class="lock-interface" id="lock-hatman1">
+                        <p style="color: var(--de-red);">檢測到極端暴力事件紀錄，請輸入權限密碼：</p>
+                        <input type="password" id="pwd-hatman1" style="border-color: var(--de-red); color: var(--de-red);">
+                        <br>
+                        <button onclick="unlockHatman1('pwd-hatman1', '布提爾卡血洗案', 'secret-hatman1', 'error-hatman1')" style="border-color: var(--de-red); color: var(--de-red);">檢定</button>
+                        <div id="error-hatman1" class="error-msg">密碼錯誤，拒絕存取。</div>
+                    </div>
+                    <div class="unlocked-content" id="secret-hatman1" style="border: none; padding: 0; margin-top: 0;">
+                        <div class="retro-terminal">
+                            <div class="terminal-header" style="color: var(--de-red); border-color: var(--de-red); text-shadow: 0 0 5px var(--de-red);">SYS.CRITICAL // EXECUTION_LOG</div>
+                            <div class="terminal-text" style="display:inline; color: var(--de-red); text-shadow: 0 0 3px var(--de-red);">
+                                <span id="typing-hatman1"></span><span class="blinking-cursor" id="cursor-hatman1" style="display:none; background-color: var(--de-red); box-shadow: 0 0 5px var(--de-red);"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 哈特曼的密碼鎖 2：第四次世界大戰 -->
+                <div class="secret-module" style="margin-bottom: 0; margin-top: 20px; border-color: var(--de-cyan);">
+                    <div class="wave-container"><svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" stroke="var(--de-cyan)"/></svg></div>
+                    <div class="lock-interface" id="lock-hatman2">
+                        <p style="color: var(--de-cyan);">核心概念深度解析，請輸入最高機密密碼：</p>
+                        <input type="password" id="pwd-hatman2" style="border-color: var(--de-cyan); color: var(--de-cyan);">
+                        <br>
+                        <button onclick="unlockHatman2('pwd-hatman2', '第四次世界大戰', 'secret-hatman2', 'error-hatman2')" style="border-color: var(--de-cyan); color: var(--de-cyan);">檢定</button>
+                        <div id="error-hatman2" class="error-msg">密碼錯誤，拒絕存取。</div>
+                    </div>
+                    <div class="unlocked-content" id="secret-hatman2" style="border: none; padding: 0; margin-top: 0;">
+                        <div class="retro-terminal">
+                            <div class="terminal-header" style="color: var(--de-cyan); border-color: var(--de-cyan);">SYS.UPDATE // CONCEPT_REVELATION</div>
+                            <div class="terminal-text" style="display:inline; color: var(--de-cyan);">
+                                <span id="typing-hatman2" style="white-space: pre-wrap;"></span><span class="blinking-cursor" id="cursor-hatman2" style="display:none; background-color: var(--de-cyan); box-shadow: 0 0 5px var(--de-cyan);"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 檔案卡 2：尼克絲•羅培茲 -->
+        <div style="border: 1px solid rgba(0,0,0,0.1); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);">
+            <div style="background: #5c2c2b; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                <div>
+                    <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">尼克絲•羅培茲•沃爾欽•霍華德</span>
+                    <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">Nyx Lopez Wolchin Howard</span>
+                </div>
+                <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[秘書長]</span>
+            </div>
+            <div style="padding: 20px;">
+                <p style="line-height: 1.8; margin-top: 0;">代號<strong>「安息香」</strong>，擁有像火一般烈焰的長卷髮，和南非粉鑽的眼睛，配有一副長方鏡片的黑框眼鏡。是唐•哈特曼的直屬上司，也是國際刑警組織的秘書長。</p>
+                <p style="line-height: 1.8;">高度理性的功利主義者，不斷在組織中以雷霆手段向上爬，是少數23世紀人中還會做夢的理想者，致力於打造「對世界更好的未來」，認為秩序應凌駕於個體的自由上，標準的右翼民粹，但實則是宣洩自身的掌控慾，並將權力野心包裝成理想，在此點上與石城 浩二有著不錯的共鳴，曾一度發展成談及合作的關係。</p>
+                <p style="line-height: 1.8;">對回夢人整體呈中立態度，但對以尤里•加加林為核心的小團體非常不滿，因此經常以職務之便將位在其中的唐•哈特曼踹入火坑，包括搶奪「弗里德里希•尼采」的回夢罐，威脅唐以達到變相的政治干預行為。視弗拉基米爾•卡利尼琴科為必須剷除的政敵。</p>
+
+                <!-- 尼克絲的密碼鎖 -->
+                <div class="secret-module" style="margin-bottom: 0; margin-top: 20px; border-color: #a39274;">
+                    <div class="wave-container"><svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" stroke="#a39274"/></svg></div>
+                    <div class="lock-interface" id="lock-nyx">
+                        <p style="color: #a39274;">檢測到政治身分轉換，請輸入權限密碼：</p>
+                        <input type="password" id="pwd-nyx" style="border-color: #a39274; color: #a39274;">
+                        <br>
+                        <button onclick="unlockNyx('pwd-nyx', '戰爭財', 'secret-nyx', 'error-nyx')" style="border-color: #a39274; color: #a39274;">檢定</button>
+                        <div id="error-nyx" class="error-msg">密碼錯誤，拒絕存取。</div>
+                    </div>
+                    <div class="unlocked-content" id="secret-nyx" style="border: none; padding: 0; margin-top: 0;">
+                        <div class="retro-terminal">
+                            <div class="terminal-header" style="color: #a39274; border-color: #a39274;">SYS.UPDATE // POLITICAL_SHIFT</div>
+                            <div class="terminal-text" style="display:inline; color: #a39274;">
+                                <span id="typing-nyx"></span><span class="blinking-cursor" id="cursor-nyx" style="display:none; background-color: #a39274; box-shadow: 0 0 5px #a39274;"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div> 
+</div>
+
+            
+          
+            <div id="faction-5" class="faction-content">
+    <h3 class="faction-header-style">◇ 新納粹主義（眾心萬民會） ◇</h3>
+    
+    <!-- 陣營背景介紹 -->
+    <div style="background: rgba(44, 62, 80, 0.05); padding: 15px 20px; border-left: 4px solid #2c3e50; margin-bottom: 20px; line-height: 1.8; color: #333;">
+        沒落的法西斯主義，分佈在西歐附近，多半是歐洲自治區，在當地握有小部分權力。儘管目前仍沒有任何證據表明「阿道夫•希特勒」的「回夢人」現界，卻意外吸引了許多對共產主義有所不滿的極右派份子，以「反社會主義、反啟蒙運動」的心態組成了新納粹主義。
+    </div>
+
+    <!-- 點擊展開成員名單的按鈕 -->
+    <button class="de-continue-btn" onclick="revealLock('roster-5', this)" style="background: linear-gradient(90deg, #2c3e50 0%, #1a252f 100%);">調閱機密檔案</button>
+
+    <!-- 隱藏的成員列表 -->
+    <div id="roster-5" style="display: none; margin-top: 25px;">
+        
+        <!-- 檔案卡 1：「耶夢加德」 -->
+        <div style="border: 1px solid rgba(0,0,0,0.1); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);">
+            <div style="background: #1b2a47; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                <div>
+                    <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">「耶夢加德」</span>
+                    <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">Jörmungandr</span>
+                </div>
+                <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[異教主教]</span>
+            </div>
+            <div style="padding: 20px;">
+                <p style="line-height: 1.8; margin-top: 0;">眾心萬民會的異教主教，自稱為「天父」代言，主持活祭和宣導教義，舉手投足間盡顯神秘恐怖的氣質。從未將真面目示人，頭上罩著亞麻白的布料遮住臉部，穿著深藍色的列車長直排扣裝束，右手心有著深紅色圖騰的眼睛花紋。</p>
+                <p style="line-height: 1.8;">歐洲自治區的實際統治者，統領所有秘密警察，嗓音輕盈柔和、雌雄莫辨，手段卻極其殘忍。<br><br>在政治光譜上屬於「卡爾•榮格」派別的法西斯，並通過「喬治•巴岱伊」血祭等活祀行為來保持團體內部的異質性。</p>
+                <p style="line-height: 1.8; background: rgba(27, 42, 71, 0.05); padding: 10px; border-left: 3px solid #1b2a47;">以第四次世界大戰後的人類危機為根基，將「人類至上」包裝成神秘主義政治宗教，透過夢、血祭、死亡與意識留存，試圖讓自我融入進意識留存，取代成眾生萬物唯一的神話信仰。</p>
+
+                <!-- 耶夢加德的密碼鎖 -->
+                <div class="secret-module" style="margin-bottom: 0; margin-top: 20px; border-color: var(--de-red);">
+                    <div class="wave-container"><svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" stroke="var(--de-red)"/></svg></div>
+                    <div class="lock-interface" id="lock-jormungandr">
+                        <p style="color: var(--de-red);">檢測到意識留存遭入侵紀錄，請輸入權限密碼：</p>
+                        <input type="password" id="pwd-jormungandr" style="border-color: var(--de-red); color: var(--de-red);">
+                        <br>
+                        <button onclick="unlockJormungandr('pwd-jormungandr', '世上再無回夢人之謎', 'secret-jormungandr', 'error-jormungandr')" style="border-color: var(--de-red); color: var(--de-red);">檢定</button>
+                        <div id="error-jormungandr" class="error-msg">密碼錯誤，拒絕存取。</div>
+                    </div>
+                    <div class="unlocked-content" id="secret-jormungandr" style="border: none; padding: 0; margin-top: 0;">
+                        <div class="retro-terminal">
+                            <div class="terminal-header" style="color: var(--de-red); border-color: var(--de-red); text-shadow: 0 0 5px var(--de-red);">SYS.CRITICAL // TERMINATION_LOG</div>
+                            <div class="terminal-text" style="display:inline; color: var(--de-red); text-shadow: 0 0 3px var(--de-red);">
+                                <span id="typing-jormungandr"></span><span class="blinking-cursor" id="cursor-jormungandr" style="display:none; background-color: var(--de-red); box-shadow: 0 0 5px var(--de-red);"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 檔案卡 2：石城 浩二 -->
+        <div style="border: 1px solid rgba(0,0,0,0.1); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);">
+            <div style="background: #1a1a1a; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                <div>
+                    <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">石城 浩二</span>
+                    <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">Ishishiro Koji</span>
+                </div>
+                <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[秘密警察]</span>
+            </div>
+            <div style="padding: 20px;">
+                <p style="line-height: 1.8; margin-top: 0;">日裔德國人，眾心萬民會秘密警察，負責監聽、監視旗下人民的生活，控管歐洲自治區的治安。性格火爆、直率，思維敏捷卻力求專制統一，擅長人際話術與武力鎮壓。常言道：「拿著鐵鎚來做哲學」，認為共產主義只是依靠著「意識留存」技術而登臺的傀儡政權，需要加以破壞並吸收其養分。</p>
+                <p style="line-height: 1.8;">並不是正統的法西斯份子，對於神話與暴行秩序沒有過多的追求，她這麼做僅僅是為了尋求「內在的統一性」並提供自身殺戮欲望的正當性。<br><br>曾作為<strong>非法監管者</strong>，在歐洲自治區以<strong>秘密警察</strong>的身份活動，對20000人以上的群體進行監視、搜捕，洗腦跟思想審查，造成有半數民眾極度恐慌與精神失常，另有2613人死於她組織的暴力審訊、違法私刑中。又透過嫁禍、偽裝、公開處刑的行為，控制自治區人民所有的精神與恐懼。</p>
+                <p style="line-height: 1.8; color: #555;">獲得尤里•加加林的核心概念後，穿上黑色棋盤的鬥牛女西裝，頭戴豬肉餅禮帽，頭側周圍環繞尤里•加加林的核心概念，具備腐蝕性的懸浮珠鏈。</p>
+
+                <!-- 石城浩二的密碼鎖 -->
+                <div class="secret-module" style="margin-bottom: 0; margin-top: 20px; border-color: var(--de-cyan);">
+                    <div class="wave-container"><svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" stroke="var(--de-cyan)"/></svg></div>
+                    <div class="lock-interface" id="lock-koji">
+                        <p style="color: var(--de-cyan);">檢測到高危政治謀殺，請輸入權限密碼：</p>
+                        <input type="password" id="pwd-koji" style="border-color: var(--de-cyan); color: var(--de-cyan);">
+                        <br>
+                        <button onclick="unlockKoji('pwd-koji', '人民代表大會血洗案', 'secret-koji', 'error-koji')" style="border-color: var(--de-cyan); color: var(--de-cyan);">檢定</button>
+                        <div id="error-koji" class="error-msg">密碼錯誤，拒絕存取。</div>
+                    </div>
+                    <div class="unlocked-content" id="secret-koji" style="border: none; padding: 0; margin-top: 0;">
+                        <div class="retro-terminal">
+                            <div class="terminal-header" style="color: var(--de-cyan); border-color: var(--de-cyan);">SYS.WARN // POLITICAL_ASSASSINATION</div>
+                            <div class="terminal-text" style="display:inline; color: var(--de-cyan);">
+                                <span id="typing-koji"></span><span class="blinking-cursor" id="cursor-koji" style="display:none; background-color: var(--de-cyan); box-shadow: 0 0 5px var(--de-cyan);"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div> 
+</div>
+
+            
+            <div id="faction-6" class="faction-content">
+    <h3 class="faction-header-style">◇ 布達佩斯大飯店 ◇</h3>
+    
+    <!-- 陣營背景介紹 -->
+    <div style="background: rgba(74, 44, 64, 0.05); padding: 15px 20px; border-left: 4px solid #4a2c40; margin-bottom: 20px; line-height: 1.8; color: #333;">
+        位於德國邊境山上的一家奢華的飯店，是許多有錢人度假的不二之選。於第三次世界大戰結束後建成，一度成為許多政客的避難之所，取自21世紀同名的喜劇電影《歡迎來到布達佩斯大飯店》，裝修也與電影最初的樣貌十分相似。<br><br>也因此催生了許多都市傳說，傳言布達佩斯大飯店屬於「回夢場」復現，其中的設備全是腦電波的幻覺，但無人能解開這個謎。
+    </div>
+
+    <!-- 點擊展開成員名單的按鈕 -->
+    <button class="de-continue-btn" onclick="revealLock('roster-6', this)" style="background: linear-gradient(90deg, #4a2c40 0%, #2a1a24 100%);">調閱機密檔案</button>
+
+    <!-- 隱藏的成員列表 -->
+    <div id="roster-6" style="display: none; margin-top: 25px;">
+        
+        <!-- 檔案卡 1：弗里德里希·尼采 -->
+        <div style="border: 1px solid rgba(0,0,0,0.1); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);">
+            <div style="background: #2b2b2b; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                <div>
+                    <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">弗里德里希·尼采</span>
+                    <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">Friedrich Nietzsche</span>
+                </div>
+                <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[復現時死亡]</span>
+            </div>
+            <div style="padding: 20px;">
+                <p style="line-height: 1.8; margin-top: 0;">被各大派系察覺到其降世，圍繞著尚未有軀殼的他展開搶奪戰，看清了自身的誕生會帶來不可抹滅的災害，於是自願死去，由藍絲絨•雷內桑斯砸碎存放他意識的「回夢罐」。</p>
+                <p style="line-height: 1.8;">但殘存的電波被藍絲絨•雷內桑斯的大腦捕捉並同頻，其核心概念 <span style="color: #2b2b2b; font-weight: bold;">「酒神歡宴的無盡輪迴——權力」</span> 融合進當時尚未覺醒的「文藝復興」裡，對應君權由「神」轉「人」的歷史。</p>
+
+                <!-- 無密碼解鎖按鈕 -->
+                <button class="de-continue-btn" onclick="unlockNietzsche('secret-nietzsche', this)" style="background: linear-gradient(90deg, #2b2b2b 0%, #111 100%); margin-top: 15px; font-size: 1rem; padding: 10px 20px;">檢視融合結果</button>
+                <div id="secret-nietzsche" style="display: none; margin-top: 15px;">
+                    <div class="retro-terminal">
+                        <div class="terminal-header" style="color: var(--de-cyan); border-color: var(--de-cyan);">SYS.UPDATE // CONCEPT_MERGE</div>
+                        <div class="terminal-text" style="color: var(--de-cyan); display:inline;">
+                            <span id="typing-nietzsche"></span><span class="blinking-cursor" id="cursor-nietzsche" style="display:inline;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 檔案卡 2：藍絲絨•溶蝕•雷內桑斯 -->
+        <div style="border: 1px solid rgba(0,0,0,0.1); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);">
+            <div style="background: #1e3b70; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                <div>
+                    <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">藍絲絨•溶蝕•雷內桑斯</span>
+                    <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">BlueVelvet Corrosion Renaissance</span>
+                </div>
+                <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[最初的試作品]</span>
+            </div>
+            <div style="padding: 20px;">
+                <p style="margin-top: 0;"><strong>【核心概念】</strong> <span style="color: #1e3b70; font-weight: bold;">「古老的人類本身，最初建成的巴別塔——文藝復興」</span></p>
+                <p style="line-height: 1.8;">葉卡捷林報社職員，具有人類肉身的「回夢人」，沒有在成為「回夢人」之前的記憶，是完全的虛構體，他不以任何手段存在於現世之中，只憑藉著每個人對於黃金年代的印象構建出集合體。對於宗教、改革、藝術有很深的理解。</p>
+                <p style="line-height: 1.8;">深藍髮金瞳，在獲得「弗里德里希·尼采」的遺產後一隻眼睛污染成紅瞳，長相接近中性雌雄莫辨，髮型偏中長卷造型，瀏海幾乎遮住眼睛。</p>
+
+                <!-- 無密碼解鎖按鈕 -->
+                <button class="de-continue-btn" onclick="unlockBlueVelvet('secret-bluevelvet', this)" style="background: linear-gradient(90deg, #1e3b70 0%, #0a1426 100%); margin-top: 15px; font-size: 1rem; padding: 10px 20px;">調閱後憶境時代紀錄</button>
+                <div id="secret-bluevelvet" style="display: none; margin-top: 15px;">
+                    <div class="retro-terminal">
+                        <div class="terminal-header" style="color: var(--de-cyan); border-color: var(--de-cyan);">SYS.UPDATE // HISTORICAL_EVALUATION</div>
+                        <div class="terminal-text" style="color: var(--de-cyan); display:inline;">
+                            <span id="typing-bluevelvet"></span><span class="blinking-cursor" id="cursor-bluevelvet" style="display:inline;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 檔案卡 3：柳德米拉•謝爾蓋耶夫•沃爾科娃 -->
+        <div style="border: 1px solid rgba(0,0,0,0.1); background: #fdfbf7; margin-bottom: 25px; box-shadow: 2px 2px 8px rgba(0,0,0,0.05);">
+            <div style="background: #8c6b4a; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+                <div>
+                    <span style="font-size: 1.25rem; font-weight: bold; font-family: 'LXGW WenKai TC', serif;">柳德米拉•謝爾蓋耶夫•沃爾科娃</span>
+                    <span style="font-size: 0.75rem; font-family: 'Courier New', monospace; margin-left: 10px; opacity: 0.7;">Людмила Сергеевна Волкова</span>
+                </div>
+                <span style="font-size: 0.8rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 2px;">[洗衣女工]</span>
+            </div>
+            <div style="padding: 20px;">
+                <p style="line-height: 1.8; margin-top: 0;">家境是為貴族提供服務的歌劇院長大，擁有非常漂亮的歌喉。力圖逃離二蘇聯清算的花季少女，布達佩斯大飯店的一名洗衣女工，忙碌在廚房和地下室之間。</p>
+                <p style="line-height: 1.8;">嚮往自由、做事勤快、喜好閱讀，在飯店經理的影響下變得十分喜歡念詩，性格爛漫溫和，典型斯拉夫人的堅韌不拔，擁有不屬於粗活生活的漂亮金髮，非常寶貝她的雙股辮，後來藍絲絨為她增加到三股辮。</p>
+
+                <!-- 無密碼解鎖按鈕 -->
+                <button class="de-continue-btn" onclick="unlockLyudmila('secret-lyudmila', this)" style="background: linear-gradient(90deg, #8c6b4a 0%, #4a3725 100%); margin-top: 15px; font-size: 1rem; padding: 10px 20px;">檢視人員調動</button>
+                <div id="secret-lyudmila" style="display: none; margin-top: 15px;">
+                    <div class="retro-terminal">
+                        <div class="terminal-header" style="color: var(--de-cyan); border-color: var(--de-cyan);">SYS.UPDATE // PERSONNEL_TRANSFER</div>
+                        <div class="terminal-text" style="color: var(--de-cyan); display:inline;">
+                            <span id="typing-lyudmila"></span><span class="blinking-cursor" id="cursor-lyudmila" style="display:inline;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> 
+</div>
+
+            
+        </div>
+
+       
+
+               <div id="tab4" class="tab-content">
+            <h2 class="faction-header-style" style="border-bottom-color: var(--tab-black);">◇ 世界變量與機密檔案 ◇</h2>
+            
+            <div class="archive-panel">
+                <h3 style="margin-top: 0; color: var(--ink-color);">[01] 官方語言與文化基底</h3>
+                <p style="line-height: 1.8;">二蘇聯上臺後，全球官方語言因此也進行一波換血。明面登記確實是俄語，法律規定義務教育也必須學俄語。</p>
+                <p style="line-height: 1.8;">但從後世的角度看，考慮到二蘇聯實際上掌權了不過十年，並且俄語對其他語言的族群來說，學習門檻實在較高。因此實際廣泛傳播的語言依然為 <strong>美式英語</strong>。</p>
+                <p style="line-height: 1.8; color: #555; font-size: 0.95rem;">同時現有的主流語言：法語、德語、英式英語、西班牙語；以及少數學術語言：拉丁語、希臘文，始終都有人還在使用，多半為高知識份子。</p>
+            </div>
+
+            <div class="archive-panel">
+                <h3 style="margin-top: 0; color: var(--ink-color);">[02] 信用金屬複本位制 (貨幣)</h3>
+                <p style="line-height: 1.8;">二蘇聯時期，政府採用的是複本位制度，也就是雙貨幣運行。但這並非過去常見的金銀複本位（如今政府不用金幣和銀幣作為交易工具），而是 <strong>「信用金屬複本位」</strong>。市面上流通的貨幣單位共有兩套：盧布與英鎊。</p>
+                
+                <div class="currency-grid">
+                    <div class="currency-card">
+                        <div class="currency-card-title" style="color: var(--de-red); border-color: var(--de-red);">盧布 (Ruble)</div>
+                        <p style="line-height: 1.6; font-size: 0.95rem; margin: 0;">以共產主義的政府信用為價值，發行同時等於貨幣又可以當債券的鈔票。其本身是有強制效力的購買單位，但極為不穩定，完全仰賴政府的誠實信用。<br><br><span style="color: #777; font-style: italic;">有當代經濟哲學家指出：「盧布在二蘇聯語境裡，就像國王的新衣...不過懶得掩蓋裸體的透明遮羞布。」（該哲學家現已被新克格勃逮捕羈押）</span></p>
+                    </div>
+                    <div class="currency-card">
+                        <div class="currency-card-title" style="color: var(--tab-blue); border-color: var(--tab-blue);">英鎊 (Pound)</div>
+                        <p style="line-height: 1.6; font-size: 0.95rem; margin: 0;">為對付「信用崩塌」導致貨幣貶值的緊急預備方案。公式為：<strong>一張鈔票 = 固定克數貴金屬 = 該金屬購買力</strong>。政府每月投入固定數量的金（或白銀）鑄成錢幣流通。<br><br>缺點是只有政府允許才能使用，易導致發戰爭財；市場浮動度低，容易導致貨幣比麵包貴，使得系統形同虛設。</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="archive-panel corrupted-item" style="border-left-color: var(--de-red);">
+                <h3 class="glitch-text" style="margin-top: 0; color: var(--de-red);">[03] 第四次世界大戰與科技斷層</h3>
+                <p style="line-height: 1.8;">表面上是因為第四次世界大戰耗盡了地球資源，導致科技退回十九世紀工業革命。但其真實意義在於，戰爭<strong>摧毀了資本主義</strong>，連帶著政治右派光譜一併被抹除，因資本主義誕生的事物也從人類科技樹中熄滅（例如直流電與交流電成為受控稀有物）。</p>
+                
+                <div style="background: rgba(211, 56, 51, 0.08); padding: 10px 15px; margin-top: 15px; border-left: 3px solid var(--de-red);">
+                    <p style="margin: 0; line-height: 1.6;"><strong>【系統推演結論】</strong><br>第四次世界大戰是一個會「自我分辨政治右派光譜」的現象，如同拿著劍的騎士，將資本主義及相關產物就地處決。但「回夢人」外層披著「人類意識」的盔甲，使得該機制無法判斷其左右派本質而放過了他們。因此，回夢人中仍然存在右派份子。</p>
+                </div>
+            </div>
+
+            <div class="archive-panel" style="padding-bottom: 5px;">
+                <h3 style="margin-top: 0; color: var(--ink-color);">[04] 異常事件紀錄</h3>
+                
+                <div class="secret-module" style="margin-top: 15px; margin-bottom: 20px; border-color: var(--de-cyan);">
+                    <div class="wave-container"><svg class="anim-wave" viewBox="0 0 100 40" preserveAspectRatio="none"><path d="M0,20 L15,20 L20,5 L25,35 L30,20 L50,20 L65,20 L70,5 L75,35 L80,20 L100,20" stroke="var(--de-cyan)"/></svg></div>
+                    <div class="lock-interface" id="lock-detective">
+                        <p style="color: var(--de-cyan);">解析虛構實體崩解原理，請輸入權限密碼：</p>
+                        <input type="password" id="pwd-detective" style="border-color: var(--de-cyan); color: var(--de-cyan);">
+                        <br>
+                        <button onclick="unlockDetective('pwd-detective', '虛構人物', 'secret-detective', 'error-detective')" style="border-color: var(--de-cyan); color: var(--de-cyan);">檢定</button>
+                        <div id="error-detective" class="error-msg">密碼錯誤，拒絕存取。</div>
+                    </div>
+                    <div class="unlocked-content" id="secret-detective" style="border: none; padding: 0; margin-top: 0;">
+                        <div class="retro-terminal">
+                            <div class="terminal-header" style="color: var(--de-cyan); border-color: var(--de-cyan);">SYS.UPDATE // ENTITY_DECONSTRUCTION</div>
+                            <div class="terminal-text" style="display:inline; color: var(--de-cyan);">
+                                <span id="typing-detective" style="white-space: pre-wrap;"></span><span class="blinking-cursor" id="cursor-detective" style="display:none; background-color: var(--de-cyan); box-shadow: 0 0 5px var(--de-cyan);"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="archive-panel">
+                <h3 style="margin-top: 0; color: var(--ink-color);">[05] 戰後文化產物</h3>
+                
+                <div class="book-display">
+                    <div class="book-title">《衣櫃的八個小時》</div>
+                    <div class="book-author">Author: 藍絲絨•溶蝕•雷內桑斯 (BlueVelvet Corrosion Renaissance)</div>
+                    <p style="line-height: 1.8; color: #333; margin-top: 0;">結合作家評論與諷刺喜劇小說的敘事方式，撰寫艾薩克•牛頓與夏洛克•福爾摩斯初期關係的傳記故事，該書透露兩位主人公相看兩厭，卻不得不攜手一起辦案的過程，一個關於衣櫃的八個小時。</p>
+                    <p style="line-height: 1.8; color: #333; margin-bottom: 0;">該書在藝術文學界的評價兩極，有部分雜誌報社批評其過於「節奏拖沓、自我意識旺盛，而忽略了故事本身的重要性」，也有評論家認為這是「橫跨物種隔閡，搭建共同溝通橋樑的開創性後憶境時代作家」。最終，這本書在上架初期即被史無前例地銷售一空，躋身當代暢銷小說行列，側面反應如今民眾對於回夢人的關心程度。</p>
+                </div>
+            </div>
+
+        </div>
+
+
+<script>
+    function switchTab(tabId, element) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        
+        const allTabs = document.querySelectorAll('.tab');
+        allTabs.forEach((tab, index) => {
+            tab.classList.remove('active');
+            tab.style.zIndex = 4 - index; 
+        });
+        
+        document.getElementById(tabId).classList.add('active');
+        
+        element.classList.add('active');
+        element.style.zIndex = 10;
+    }
+
+        // --- 終端機資料解密打字動畫 ---
+    const terminalTextToType = "後在回夢場大討論會十三人決議，以十年政權「二蘇聯」的解體為代價，人類重新恢復做夢的機能，成立了「新世界人民代表大會」的26席政府共同決議，目前已知的有：回夢人一席、海運部一席、新克格勃與新內務部合併後一席、改組後國際刑警組織一席。";
+    let terminal_i = 0;
+    let isTerminalTyping = false; // 防止重複觸發
+
+    function typeTerminalEffect() {
+        const typingElement = document.getElementById("terminal-typing-text");
+        if (terminal_i < terminalTextToType.length) {
+            typingElement.innerHTML += terminalTextToType.charAt(terminal_i);
+            terminal_i++;
+            // 終端機輸出的速度通常比人打字快，且比較規律
+            let randomDelay = Math.floor(Math.random() * 30) + 10; 
+            setTimeout(typeTerminalEffect, randomDelay);
+        } else {
+            isTerminalTyping = false;
+        }
+    }
+
+    // 更新版的解鎖功能
+    function unlock(inputId, correctPwd, contentId, errorId) {
+        if (document.getElementById(inputId).value === correctPwd) {
+            // 解鎖成功，顯示隱藏區塊
+            document.getElementById(contentId).style.display = 'block';
+            document.getElementById(inputId).parentElement.style.display = 'none';
+            document.getElementById(errorId).style.display = 'none';
+            
+            // 避免重複點擊造成動畫錯亂
+            if (!isTerminalTyping) {
+                isTerminalTyping = true;
+                terminal_i = 0; // 重置字元索引
+                document.getElementById("terminal-typing-text").innerHTML = ""; // 清空舊文字
+                document.getElementById("terminal-cursor").style.display = "inline-block"; // 顯示閃爍游標
+                
+                // 停頓 0.5 秒，營造出「系統正在讀取」的懸疑感後，再開始印出代碼
+                setTimeout(typeTerminalEffect, 500); 
+            }
+        } else {
+            // 密碼錯誤
+            document.getElementById(errorId).style.display = 'block';
+        }
+    }
+    // --- 「繼續」按鈕展開隱藏區塊功能 ---
+    function revealLock(containerId, btnElement) {
+        document.getElementById(containerId).style.display = 'block';
+        btnElement.style.display = 'none'; // 點擊後隱藏「繼續」按鈕
+    }
+
+    // --- 第二個終端機資料解密打字動畫 (核心概念) ---
+    const terminalTextToType2 = "回夢人若遭受不可控外力的影響下而死，其核心概念會轉化成其對應的可佩戴天基武器，具有強大的殺傷力及超越科技水平的幻象顯現，並蠶食使用者的理智，最後佩戴者靈魂會變成核心概念的一部分。";
+    let terminal_i_2 = 0;
+    let isTerminalTyping2 = false; 
+
+    function typeTerminalEffect2() {
+        const typingElement = document.getElementById("terminal-typing-text-2");
+        if (terminal_i_2 < terminalTextToType2.length) {
+            typingElement.innerHTML += terminalTextToType2.charAt(terminal_i_2);
+            terminal_i_2++;
+            let randomDelay = Math.floor(Math.random() * 30) + 10; 
+            setTimeout(typeTerminalEffect2, randomDelay);
+        } else {
+            isTerminalTyping2 = false;
+        }
+    }
+
+    // 專屬於核心概念的解鎖功能
+    function unlock2(inputId, correctPwd, contentId, errorId) {
+        if (document.getElementById(inputId).value === correctPwd) {
+            document.getElementById(contentId).style.display = 'block';
+            document.getElementById(inputId).parentElement.style.display = 'none';
+            document.getElementById(errorId).style.display = 'none';
+            
+            if (!isTerminalTyping2) {
+                isTerminalTyping2 = true;
+                terminal_i_2 = 0; 
+                document.getElementById("terminal-typing-text-2").innerHTML = ""; 
+                document.getElementById("terminal-cursor-2").style.display = "inline-block"; 
+                setTimeout(typeTerminalEffect2, 500); 
+            }
+        } else {
+            document.getElementById(errorId).style.display = 'block';
+        }
+    }
+    // --- 第三個終端機資料解密打字動畫 (回夢場) ---
+    const terminalTextToType3 = "二蘇聯政權末期，「列寧」利用此概念，作為主持者召集的特殊閉門會議。該會議共有十三名出席者，包含回夢人、人類代表、蘇聯、法西斯、特殊概念個體，以及兩名以異常形式列席的已故者。";
+    let terminal_i_3 = 0;
+    let isTerminalTyping3 = false; 
+
+    function typeTerminalEffect3() {
+        const typingElement = document.getElementById("terminal-typing-text-3");
+        if (terminal_i_3 < terminalTextToType3.length) {
+            typingElement.innerHTML += terminalTextToType3.charAt(terminal_i_3);
+            terminal_i_3++;
+            let randomDelay = Math.floor(Math.random() * 30) + 10; 
+            setTimeout(typeTerminalEffect3, randomDelay);
+        } else {
+            isTerminalTyping3 = false;
+        }
+    }
+
+    function unlock3(inputId, correctPwd, contentId, errorId) {
+        if (document.getElementById(inputId).value === correctPwd) {
+            document.getElementById(contentId).style.display = 'block';
+            document.getElementById(inputId).parentElement.style.display = 'none';
+            document.getElementById(errorId).style.display = 'none';
+            if (!isTerminalTyping3) {
+                isTerminalTyping3 = true;
+                terminal_i_3 = 0; 
+                document.getElementById("terminal-typing-text-3").innerHTML = ""; 
+                document.getElementById("terminal-cursor-3").style.display = "inline-block"; 
+                setTimeout(typeTerminalEffect3, 500); 
+            }
+        } else {
+            document.getElementById(errorId).style.display = 'block';
+        }
+    }
+
+    // --- 第四個終端機資料解密打字動畫 (蒙娜麗莎的微笑) ---
+    // 使用 \n\n 來處理多段落換行，配合 HTML 的 pre-wrap
+    const terminalTextToType4 = "1.患者會在接觸「意識留存」時陷入幻覺，具體表現為患者當其最感到精神壓力的事物。\n\n2.其中，人類與「回夢人」發作的概率為2:1，在藍絲絨•雷內桑斯的身上症狀最為嚴重，甚至會扭曲當事人的記憶與相關現實。\n\n3.初步研判是無線電波的影響，干擾了人腦的正常判斷，詳細解決手段可以施打鎮定劑或餵食特殊製機油。";
+    let terminal_i_4 = 0;
+    let isTerminalTyping4 = false; 
+
+    function typeTerminalEffect4() {
+        const typingElement = document.getElementById("terminal-typing-text-4");
+        if (terminal_i_4 < terminalTextToType4.length) {
+            typingElement.innerHTML += terminalTextToType4.charAt(terminal_i_4);
+            terminal_i_4++;
+            let randomDelay = Math.floor(Math.random() * 20) + 10; // 稍微調快速度應付長文本
+            setTimeout(typeTerminalEffect4, randomDelay);
+        } else {
+            isTerminalTyping4 = false;
+        }
+    }
+
+    function unlock4(inputId, correctPwd, contentId, errorId) {
+        if (document.getElementById(inputId).value === correctPwd) {
+            document.getElementById(contentId).style.display = 'block';
+            document.getElementById(inputId).parentElement.style.display = 'none';
+            document.getElementById(errorId).style.display = 'none';
+            if (!isTerminalTyping4) {
+                isTerminalTyping4 = true;
+                terminal_i_4 = 0; 
+                document.getElementById("terminal-typing-text-4").innerHTML = ""; 
+                document.getElementById("terminal-cursor-4").style.display = "inline-block"; 
+                setTimeout(typeTerminalEffect4, 500); 
+            }
+        } else {
+            document.getElementById(errorId).style.display = 'block';
+        }
+    }
+    // --- 陣營子分頁切換邏輯 ---
+    function switchFaction(factionId, element) {
+        // 隱藏所有陣營的內容區塊
+        document.querySelectorAll('.faction-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        
+        // 移除所有陣營按鈕的 active 狀態
+        document.querySelectorAll('.faction-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        // 顯示被點擊的陣營內容
+        document.getElementById(factionId).classList.add('active');
+        
+        // 將被點擊的按鈕設為 active (變成深黑色)
+        element.classList.add('active');
+    }
+    // --- 夏洛克無密碼直接展開打字動畫 ---
+    const textSherlock1 = "曾擔任回夢人互助協會的 *政治顧問* 及 *唯一外交官*，在尤里•加加林自殺後，正式加入了回夢人互助協會，同時也是 *世上再無回夢人之謎* 的當事者。";
+    let indexSherlock1 = 0;
+
+    function effectSherlock1() {
+        if (indexSherlock1 < textSherlock1.length) {
+            document.getElementById("typing-sherlock-1").innerHTML += textSherlock1.charAt(indexSherlock1);
+            indexSherlock1++;
+            setTimeout(effectSherlock1, Math.floor(Math.random() * 30) + 10);
+        }
+    }
+
+    function unlockSherlock1(containerId, btnElement) {
+        document.getElementById(containerId).style.display = 'block';
+        btnElement.style.display = 'none';
+        indexSherlock1 = 0;
+        document.getElementById("typing-sherlock-1").innerHTML = "";
+        setTimeout(effectSherlock1, 200); 
+    }
+
+    // --- 夏洛克密碼解鎖打字動畫 (死亡檔案) ---
+    // 使用 \n\n 來處理段落換行
+    const textSherlock2 = "後已於2310年～2311年期間進行「自主強制停機」陣亡，該個體目前被判斷為可逆性死亡。\n\n補充條目：該個體的死亡，並不證明其具備完整肉體，只能證明在強制停機當下，外界對「夏洛克・福爾摩斯已死」的認知仍足以維持死亡形態。";
+    let indexSherlock2 = 0;
+    let isTypingSherlock2 = false; 
+
+    function effectSherlock2() {
+        const typingElement = document.getElementById("typing-sherlock-2");
+        if (indexSherlock2 < textSherlock2.length) {
+            typingElement.innerHTML += textSherlock2.charAt(indexSherlock2);
+            indexSherlock2++;
+            setTimeout(effectSherlock2, Math.floor(Math.random() * 30) + 10);
+        } else {
+            isTypingSherlock2 = false;
+        }
+    }
+
+    function unlockSherlock2(inputId, correctPwd, contentId, errorId) {
+        if (document.getElementById(inputId).value === correctPwd) {
+            document.getElementById(contentId).style.display = 'block';
+            document.getElementById(inputId).parentElement.style.display = 'none';
+            document.getElementById(errorId).style.display = 'none';
+            if (!isTypingSherlock2) {
+                isTypingSherlock2 = true;
+                indexSherlock2 = 0; 
+                document.getElementById("typing-sherlock-2").innerHTML = ""; 
+                document.getElementById("cursor-sherlock-2").style.display = "inline-block"; 
+                setTimeout(effectSherlock2, 500); 
+            }
+        } else {
+            document.getElementById(errorId).style.display = 'block';
+        }
+    }
+
+    // --- 牛頓無密碼直接展開打字動畫 ---
+    const textNewton = "後接替尤里•加加林的職位，成為憶境聯盟及回夢人互助協會的 *正式領導人* 兼 *財政主管*，同時人格產生了微妙的變化。";
+    let indexNewton = 0;
+
+    function effectNewton() {
+        if (indexNewton < textNewton.length) {
+            document.getElementById("typing-newton").innerHTML += textNewton.charAt(indexNewton);
+            indexNewton++;
+            setTimeout(effectNewton, Math.floor(Math.random() * 30) + 10);
+        }
+    }
+
+    function unlockNewton(containerId, btnElement) {
+        document.getElementById(containerId).style.display = 'block';
+        btnElement.style.display = 'none';
+        indexNewton = 0;
+        document.getElementById("typing-newton").innerHTML = "";
+        setTimeout(effectNewton, 200); 
+    }
+    // --- 阿格隆 (蘇聯律賊) 密碼解鎖打字動畫 ---
+    const textAgron = "戰役代號：[REDACTED] // 倫敦區塊發生空間震盪。檢測到兩名目標信號交叉消失。關於阿格隆個體與哈特曼個體的最終狀況，官方紀錄顯示為：兩者皆已判定為[已抹除]。現場殘留物包括：齒輪碎片、黑色液體，以及未知的[數據遺失]。";
+    let indexAgron = 0;
+    let typingAgron = false; 
+
+    function effectAgron() {
+        if (indexAgron < textAgron.length) {
+            document.getElementById("typing-agron").innerHTML += textAgron.charAt(indexAgron);
+            indexAgron++;
+            setTimeout(effectAgron, Math.floor(Math.random() * 30) + 10);
+        } else {
+            typingAgron = false;
+        }
+    }
+
+    function unlockAgron(inputId, correctPwd, contentId, errorId) {
+        if (document.getElementById(inputId).value === correctPwd) {
+            document.getElementById(contentId).style.display = 'block';
+            document.getElementById(inputId).parentElement.style.display = 'none';
+            document.getElementById(errorId).style.display = 'none';
+            if (!typingAgron) {
+                typingAgron = true;
+                indexAgron = 0; 
+                document.getElementById("typing-agron").innerHTML = ""; 
+                document.getElementById("cursor-agron").style.display = "inline-block"; 
+                setTimeout(effectAgron, 500); 
+            }
+        } else {
+            document.getElementById(errorId).style.display = 'block';
+        }
+    }
+
+</script>
+<script>
+    // --- 打字機動畫腳本 ---
+    document.addEventListener("DOMContentLoaded", function() {
+        const textToType = "OUR HISTORY IS REGRESSING - YET THIS BRINGS NO SORROW - INSTEAD THE NOSTALGIA OF BYGONE DAYS BURNS WITHIN MY CHEST - PERMEATING THE FAINT WHITE SMOKE OF THE STEAM TRAIN.";
+        const typingElement = document.getElementById("typing-text");
+        const translationElement = document.getElementById("typing-translation");
+        let i = 0;
+
+        function typeWriterEffect() {
+            if (i < textToType.length) {
+                typingElement.innerHTML += textToType.charAt(i);
+                i++;
+                // 產生隨機的打字延遲 (30毫秒 ~ 90毫秒)，模擬人類敲擊鍵盤的真實停頓感
+                let randomDelay = Math.floor(Math.random() * 60) + 30;
+                setTimeout(typeWriterEffect, randomDelay);
+            } else {
+                // 打字結束後，讓下方的中文翻譯緩緩浮現
+                translationElement.style.opacity = 1;
+            }
+        }
+
+        // 稍微延遲 0.5 秒後開始打字，讓讀者有準備時間
+        setTimeout(typeWriterEffect, 500);
+    });
+    // --- 打字機動畫腳本結束 ---
+           // --- 尤里密碼解鎖打字動畫 ---
+    const textYuri = "已於2307年上吊自殺去世，該核心概念落入人類 *石城 浩二* 個體之手，其外表如同懸浮的珠鏈星體，會滲出帶有腐蝕性的黑泥狀液體。";
+    let indexYuri = 0;
+    let typingYuri = false; 
+
+    function effectYuri() {
+        if (indexYuri < textYuri.length) {
+            document.getElementById("typing-yuri").innerHTML += textYuri.charAt(indexYuri);
+            indexYuri++;
+            setTimeout(effectYuri, Math.floor(Math.random() * 30) + 10);
+        } else {
+            typingYuri = false;
+        }
+    }
+
+    function unlockYuri(inputId, correctPwd, contentId, errorId) {
+        if (document.getElementById(inputId).value === correctPwd) {
+            document.getElementById(contentId).style.display = 'block';
+            document.getElementById(inputId).parentElement.style.display = 'none';
+            document.getElementById(errorId).style.display = 'none';
+            if (!typingYuri) {
+                typingYuri = true;
+                indexYuri = 0; 
+                document.getElementById("typing-yuri").innerHTML = ""; 
+                document.getElementById("cursor-yuri").style.display = "inline-block"; 
+                setTimeout(effectYuri, 500); 
+            }
+        } else {
+            document.getElementById(errorId).style.display = 'block';
+        }
+    }
+
+    // --- 維克多無密碼直接展開打字動畫 ---
+    const textVictor = "現任回夢人互助協會之 *技術開發人員*、*臨床醫生*，在政治顧問死亡後擔任 *副手*。";
+    let indexVictor = 0;
+
+    function effectVictor() {
+        if (indexVictor < textVictor.length) {
+            document.getElementById("typing-victor").innerHTML += textVictor.charAt(indexVictor);
+            indexVictor++;
+            setTimeout(effectVictor, Math.floor(Math.random() * 30) + 10);
+        }
+    }
+
+    function unlockVictor(containerId, btnElement) {
+        // 點擊後隱藏自己的按鈕並顯示區塊
+        document.getElementById(containerId).style.display = 'block';
+        btnElement.style.display = 'none';
+        
+        indexVictor = 0;
+        document.getElementById("typing-victor").innerHTML = "";
+        setTimeout(effectVictor, 200); // 稍微停頓後直接印出字
+    }
+// --- 列寧 密碼解鎖打字動畫 ---
+const textLenin = "更新條目：其同時也是「回夢場大討論會」之主持人及號召者，並在之後選擇將自我分解進「意識留存」使人類物種得以重新做夢。";
+let indexLenin = 0;
+let typingLenin = false; 
+
+function effectLenin() {
+    if (indexLenin < textLenin.length) {
+        document.getElementById("typing-lenin").innerHTML += textLenin.charAt(indexLenin);
+        indexLenin++;
+        setTimeout(effectLenin, Math.floor(Math.random() * 30) + 10);
+    } else {
+        typingLenin = false;
+    }
+}
+
+function unlockLenin(inputId, correctPwd, contentId, errorId) {
+    if (document.getElementById(inputId).value === correctPwd) {
+        document.getElementById(contentId).style.display = 'block';
+        document.getElementById(inputId).parentElement.style.display = 'none';
+        document.getElementById(errorId).style.display = 'none';
+        if (!typingLenin) {
+            typingLenin = true;
+            indexLenin = 0; 
+            document.getElementById("typing-lenin").innerHTML = ""; 
+            document.getElementById("cursor-lenin").style.display = "inline-block"; 
+            setTimeout(effectLenin, 500); 
+        }
+    } else {
+        document.getElementById(errorId).style.display = 'block';
+    }
+}
+
+// --- 卡利尼琴科 密碼解鎖打字動畫 ---
+const textVladimir = "更新條目：該個體在「回夢場大討論會」的後憶境時代，人格產生了客觀性的重大改變。針對唐•哈特曼「第四次世界大戰」的身份，開始進行相關的干涉行為。";
+let indexVladimir = 0;
+let typingVladimir = false; 
+
+function effectVladimir() {
+    if (indexVladimir < textVladimir.length) {
+        document.getElementById("typing-vladimir").innerHTML += textVladimir.charAt(indexVladimir);
+        indexVladimir++;
+        setTimeout(effectVladimir, Math.floor(Math.random() * 30) + 10);
+    } else {
+        typingVladimir = false;
+    }
+}
+
+function unlockVladimir(inputId, correctPwd, contentId, errorId) {
+    if (document.getElementById(inputId).value === correctPwd) {
+        document.getElementById(contentId).style.display = 'block';
+        document.getElementById(inputId).parentElement.style.display = 'none';
+        document.getElementById(errorId).style.display = 'none';
+        if (!typingVladimir) {
+            typingVladimir = true;
+            indexVladimir = 0; 
+            document.getElementById("typing-vladimir").innerHTML = ""; 
+            document.getElementById("cursor-vladimir").style.display = "inline-block"; 
+            setTimeout(effectVladimir, 500); 
+        }
+    } else {
+        document.getElementById(errorId).style.display = 'block';
+    }
+}
+// --- 哈特曼 密碼解鎖 1：血洗案 ---
+const textHatman1 = "更新條目：*布提爾卡監獄血洗案*的兇手，受害者包括*夏洛克•福爾摩斯*、*艾薩克•牛頓*等七人死亡，官方紀錄已對該個體處決成功。其身份同時也是殺死156人以上的連環殺手。";
+let indexHatman1 = 0;
+let typingHatman1 = false; 
+
+function effectHatman1() {
+    if (indexHatman1 < textHatman1.length) {
+        document.getElementById("typing-hatman1").innerHTML += textHatman1.charAt(indexHatman1);
+        indexHatman1++;
+        setTimeout(effectHatman1, Math.floor(Math.random() * 30) + 10);
+    } else {
+        typingHatman1 = false;
+    }
+}
+
+function unlockHatman1(inputId, correctPwd, contentId, errorId) {
+    if (document.getElementById(inputId).value === correctPwd) {
+        document.getElementById(contentId).style.display = 'block';
+        document.getElementById(inputId).parentElement.style.display = 'none';
+        document.getElementById(errorId).style.display = 'none';
+        if (!typingHatman1) {
+            typingHatman1 = true;
+            indexHatman1 = 0; 
+            document.getElementById("typing-hatman1").innerHTML = ""; 
+            document.getElementById("cursor-hatman1").style.display = "inline-block"; 
+            setTimeout(effectHatman1, 500); 
+        }
+    } else {
+        document.getElementById(errorId).style.display = 'block';
+    }
+}
+
+// --- 哈特曼 密碼解鎖 2：第四次世界大戰 ---
+const textHatman2 = "後在「蘇聯莫里亞蒂」一役後，腦部外出血從大笨鐘上摔落，經搶救無效宣告死亡。但在藍絲絨•雷內桑斯的「人文主義精神」影響下，「意識留存」記住了她的樣貌，重生以回夢人的身份行動，掌握核心概念「我將如已死的浪潮滾滾而來——自由」成為面部由一束燦爛百合作為認知濾網遮擋的回夢人。\n\n但在2309年，回夢人互助協會發現「自由」只是她的偽裝，核心概念的真實身份是代表「資本主義殞落」——「第四次世界大戰」。";
+let indexHatman2 = 0;
+let typingHatman2 = false; 
+
+function effectHatman2() {
+    if (indexHatman2 < textHatman2.length) {
+        let char = textHatman2.charAt(indexHatman2);
+        // 處理換行符號
+        if (char === '\n') {
+            document.getElementById("typing-hatman2").innerHTML += '<br>';
+        } else {
+            document.getElementById("typing-hatman2").innerHTML += char;
+        }
+        indexHatman2++;
+        setTimeout(effectHatman2, Math.floor(Math.random() * 30) + 10);
+    } else {
+        typingHatman2 = false;
+    }
+}
+
+function unlockHatman2(inputId, correctPwd, contentId, errorId) {
+    if (document.getElementById(inputId).value === correctPwd) {
+        document.getElementById(contentId).style.display = 'block';
+        document.getElementById(inputId).parentElement.style.display = 'none';
+        document.getElementById(errorId).style.display = 'none';
+        if (!typingHatman2) {
+            typingHatman2 = true;
+            indexHatman2 = 0; 
+            document.getElementById("typing-hatman2").innerHTML = ""; 
+            document.getElementById("cursor-hatman2").style.display = "inline-block"; 
+            setTimeout(effectHatman2, 500); 
+        }
+    } else {
+        document.getElementById(errorId).style.display = 'block';
+    }
+}
+
+// --- 尼克絲 密碼解鎖：戰爭財 ---
+const textNyx = "更新條目：該個體在「後憶境時代」改組了國際刑警組織，選擇融入進當前政府——新世界人民代表大會，成為其中的議員代表。";
+let indexNyx = 0;
+let typingNyx = false; 
+
+function effectNyx() {
+    if (indexNyx < textNyx.length) {
+        document.getElementById("typing-nyx").innerHTML += textNyx.charAt(indexNyx);
+        indexNyx++;
+        setTimeout(effectNyx, Math.floor(Math.random() * 30) + 10);
+    } else {
+        typingNyx = false;
+    }
+}
+
+function unlockNyx(inputId, correctPwd, contentId, errorId) {
+    if (document.getElementById(inputId).value === correctPwd) {
+        document.getElementById(contentId).style.display = 'block';
+        document.getElementById(inputId).parentElement.style.display = 'none';
+        document.getElementById(errorId).style.display = 'none';
+        if (!typingNyx) {
+            typingNyx = true;
+            indexNyx = 0; 
+            document.getElementById("typing-nyx").innerHTML = ""; 
+            document.getElementById("cursor-nyx").style.display = "inline-block"; 
+            setTimeout(effectNyx, 500); 
+        }
+    } else {
+        document.getElementById(errorId).style.display = 'block';
+    }
+}
+// --- 耶夢加德 密碼解鎖打字動畫 ---
+const textJormungandr = "更新條目：該個體在嘗試侵占「意識留存」時，被*藍絲絨•雷內桑斯*及*石城 浩二*聯手擊殺，當時以「暫時犧牲所有回夢人」為代價，成功阻斷其入侵人類信仰。";
+let indexJormungandr = 0;
+let typingJormungandr = false; 
+
+function effectJormungandr() {
+    if (indexJormungandr < textJormungandr.length) {
+        document.getElementById("typing-jormungandr").innerHTML += textJormungandr.charAt(indexJormungandr);
+        indexJormungandr++;
+        setTimeout(effectJormungandr, Math.floor(Math.random() * 30) + 10);
+    } else {
+        typingJormungandr = false;
+    }
+}
+
+function unlockJormungandr(inputId, correctPwd, contentId, errorId) {
+    if (document.getElementById(inputId).value === correctPwd) {
+        document.getElementById(contentId).style.display = 'block';
+        document.getElementById(inputId).parentElement.style.display = 'none';
+        document.getElementById(errorId).style.display = 'none';
+        if (!typingJormungandr) {
+            typingJormungandr = true;
+            indexJormungandr = 0; 
+            document.getElementById("typing-jormungandr").innerHTML = ""; 
+            document.getElementById("cursor-jormungandr").style.display = "inline-block"; 
+            setTimeout(effectJormungandr, 500); 
+        }
+    } else {
+        document.getElementById(errorId).style.display = 'block';
+    }
+}
+
+// --- 石城浩二 密碼解鎖打字動畫 ---
+const textKoji = "更新條目：*人民代表大會血洗案*的兇手，殺死總共七席代表，並經由政治手段畏罪加入回夢人互助協會，並企圖嫁禍於*唐•哈特曼*。";
+let indexKoji = 0;
+let typingKoji = false; 
+
+function effectKoji() {
+    if (indexKoji < textKoji.length) {
+        document.getElementById("typing-koji").innerHTML += textKoji.charAt(indexKoji);
+        indexKoji++;
+        setTimeout(effectKoji, Math.floor(Math.random() * 30) + 10);
+    } else {
+        typingKoji = false;
+    }
+}
+
+function unlockKoji(inputId, correctPwd, contentId, errorId) {
+    if (document.getElementById(inputId).value === correctPwd) {
+        document.getElementById(contentId).style.display = 'block';
+        document.getElementById(inputId).parentElement.style.display = 'none';
+        document.getElementById(errorId).style.display = 'none';
+        if (!typingKoji) {
+            typingKoji = true;
+            indexKoji = 0; 
+            document.getElementById("typing-koji").innerHTML = ""; 
+            document.getElementById("cursor-koji").style.display = "inline-block"; 
+            setTimeout(effectKoji, 500); 
+        }
+    } else {
+        document.getElementById(errorId).style.display = 'block';
+    }
+}
+// --- 尼采 無密碼解鎖打字動畫 ---
+const textNietzsche = "更新條目：該個體成為了*藍絲絨•雷內桑斯*的第二人格。";
+let indexNietzsche = 0;
+
+function effectNietzsche() {
+    if (indexNietzsche < textNietzsche.length) {
+        document.getElementById("typing-nietzsche").innerHTML += textNietzsche.charAt(indexNietzsche);
+        indexNietzsche++;
+        setTimeout(effectNietzsche, Math.floor(Math.random() * 30) + 10);
+    }
+}
+
+function unlockNietzsche(containerId, btnElement) {
+    document.getElementById(containerId).style.display = 'block';
+    btnElement.style.display = 'none';
+    indexNietzsche = 0;
+    document.getElementById("typing-nietzsche").innerHTML = "";
+    setTimeout(effectNietzsche, 200); 
+}
+
+// --- 藍絲絨 無密碼解鎖打字動畫 ---
+const textBlueVelvet = "更新條目：在後憶境時代，被兩個物種共同尊稱為「英雄」，是人類與歷史機械自然人的絕對橋樑。";
+let indexBlueVelvet = 0;
+
+function effectBlueVelvet() {
+    if (indexBlueVelvet < textBlueVelvet.length) {
+        document.getElementById("typing-bluevelvet").innerHTML += textBlueVelvet.charAt(indexBlueVelvet);
+        indexBlueVelvet++;
+        setTimeout(effectBlueVelvet, Math.floor(Math.random() * 30) + 10);
+    }
+}
+
+function unlockBlueVelvet(containerId, btnElement) {
+    document.getElementById(containerId).style.display = 'block';
+    btnElement.style.display = 'none';
+    indexBlueVelvet = 0;
+    document.getElementById("typing-bluevelvet").innerHTML = "";
+    setTimeout(effectBlueVelvet, 200); 
+}
+
+// --- 柳德米拉 無密碼解鎖打字動畫 ---
+const textLyudmila = "更新條目：後成為*藍絲絨•雷內桑斯*的助手。";
+let indexLyudmila = 0;
+
+function effectLyudmila() {
+    if (indexLyudmila < textLyudmila.length) {
+        document.getElementById("typing-lyudmila").innerHTML += textLyudmila.charAt(indexLyudmila);
+        indexLyudmila++;
+        setTimeout(effectLyudmila, Math.floor(Math.random() * 30) + 10);
+    }
+}
+
+function unlockLyudmila(containerId, btnElement) {
+    document.getElementById(containerId).style.display = 'block';
+    btnElement.style.display = 'none';
+    indexLyudmila = 0;
+    document.getElementById("typing-lyudmila").innerHTML = "";
+    setTimeout(effectLyudmila, 200); 
+}
+// --- 虛構人物 (二次名偵探之死) 密碼解鎖打字動畫 ---
+const textDetective = "關於「二次名偵探之死」：\n\n一般來說，夏洛克•福爾摩斯屬於虛構人物，他現界的手段是靠干擾後的腦電波，也就是靠直接純化信仰進行復現。本質上來說，這類回夢人的存在手段比起一般回夢人，還更無法被觀測，常規手段是無法對這類虛構人物進行解剖跟研究。\n\n（類似於原子之間的疊加態，有原子就會有碰撞體積，但他們的原子其實是一種波動，依靠核心概念為主散發的穩定形波長）\n\n但同時，運用核心概念的互相碰撞，可以讓虛構人物的實體「獨立出來」也就是把人類拆成器官組成的過程，其他的核心概念可以使他們被「分割」成「具備物理意義」的小塊零件。因此，當初在監獄血洗案，唐•哈特曼殺死該個體之前，選擇先殺了艾薩克•牛頓，剜出他的核心概念，利用「定律」化形的爪刀功能，才將該個體殺死。\n\n此外，關於「強制停機」為何會留下屍體。答案屬該個體的核心概念還留在體內，並且未完全失效，眾人對於「偵探」的信仰沒有改變，導致了福爾摩斯即便強制停機，卻仍然留有了屍體。是該個體單方面切斷了腦電波聯繫，但他人對其的腦電波認知依然是存在的。因此不是像大笨鐘之役時，變成虛化體供唐•哈特曼從胸膛穿出，而是留下了真實的屍體。";
+let indexDetective = 0;
+let typingDetective = false; 
+
+function effectDetective() {
+    if (indexDetective < textDetective.length) {
+        let char = textDetective.charAt(indexDetective);
+        // 遇到換行符號時轉成 HTML 的 <br> 標籤
+        if (char === '\n') {
+            document.getElementById("typing-detective").innerHTML += '<br>';
+        } else {
+            document.getElementById("typing-detective").innerHTML += char;
+        }
+        indexDetective++;
+        // 稍微調快打字速度，因為這段文字非常長
+        setTimeout(effectDetective, Math.floor(Math.random() * 20) + 5);
+    } else {
+        typingDetective = false;
+    }
+}
+
+function unlockDetective(inputId, correctPwd, contentId, errorId) {
+    if (document.getElementById(inputId).value === correctPwd) {
+        document.getElementById(contentId).style.display = 'block';
+        document.getElementById(inputId).parentElement.style.display = 'none';
+        document.getElementById(errorId).style.display = 'none';
+        if (!typingDetective) {
+            typingDetective = true;
+            indexDetective = 0; 
+            document.getElementById("typing-detective").innerHTML = ""; 
+            document.getElementById("cursor-detective").style.display = "inline-block"; 
+            setTimeout(effectDetective, 500); 
+        }
+    } else {
+        document.getElementById(errorId).style.display = 'block';
+    }
+}
+
+</script>
+
+</body>
+</html>
